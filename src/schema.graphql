@@ -1,0 +1,165 @@
+scalar Date
+scalar JSON
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+}
+
+input SortColumn {
+  field: String
+  order: SortOrder
+}
+
+input SortInput {
+  order: [[String]]
+}
+
+input PaginationInput {
+  page: Int!
+  pageSize: Int!
+}
+
+type PageInfo {
+  currentPage: Int
+  perPage: Int
+  itemCount: Int
+  pageItemCount: Int
+  pageCount: Int
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+input Id {
+  id: String
+  uuid: String
+}
+
+input StringFilterConstraint {
+  ne: String
+  eq: String
+  like: String
+  notLike: String
+  is: String
+  not: String
+  in: [String]
+  notIn: [String]
+}
+
+input IntFilterConstraint {
+  in: [Int]
+  notIn: [Int]
+  ne: Int
+  eq: Int
+  lte: Int
+  lt: Int
+  gte: Int
+  gt: Int
+  between: [Int]
+  notBetween: [Int]
+  is: Int
+}
+
+input FloatFilterConstraint {
+  in: [Float]
+  notIn: [Float]
+  ne: Float
+  eq: Float
+  lte: Int
+  lt: Int
+  gte: Int
+  gt: Float
+  between: [Float]
+  notBetween: [Float]
+  is: Float
+}
+
+input DateFilterConstraint {
+  lte: Date
+  lt: Date
+  gte: Date
+  gt: Date
+  between: [Date]
+  notBetween: [Date]
+  isNull: Date
+  isNotNull: Date
+}
+
+input BooleanFilterConstraint {
+  is: String
+}
+
+"Receipt Schema"
+type Receipt {
+  id: ID!
+  uuid: String!
+  receiptNumber: Int!
+  year: Int
+  date: Date
+  mobileNumber: Int
+  name: String
+  address: String
+  amount: Int!
+  aadharNumber: Int
+  panNumber: Int
+}
+
+type Receipts {
+  results: [Receipt]
+  pageInfo: PageInfo
+}
+
+input WhereOptionsReceipts {
+  and: [WhereOptionsReceipts]
+  or: [WhereOptionsReceipts]
+
+  id: String
+  uuid: String
+  designation: String
+}
+
+type Query {
+  ReceiptsAll: [Receipt]
+  Receipts(
+    where: WhereOptionsReceipts
+    paginate: PaginationInput
+    sort: SortInput
+  ): Receipts
+  Receipt(where: WhereOptionsReceipts): Receipt
+}
+
+input CreateReceipt {
+  receiptNumber: Int!
+  year: Int
+  date: Date
+  mobileNumber: Int
+  name: String
+  address: String
+  amount: Int!
+  aadharNumber: Int
+  panNumber: Int
+}
+
+input UpdateReceipt {
+  receiptNumber: Int!
+  year: Int
+  date: Date
+  mobileNumber: Int
+  name: String
+  address: String
+  amount: Int!
+  aadharNumber: Int
+  panNumber: Int
+}
+
+type Mutation {
+  createReceipt(item: CreateReceipt!): Receipt
+  updateReceipt(id: String!, item: UpdateReceipt!): Receipt
+  deleteReceipt(id: String!): Receipt
+}

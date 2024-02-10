@@ -1,0 +1,41 @@
+import isNumber from 'lodash/isNumber';
+
+import { CountResponse, ObjectCountResponse, PaginatedResponse, QueryArgs } from '../../common/types';
+import { DefaultQueryArgs } from './constants';
+import { parsePagination } from './parsePagination';
+
+export const withPageInfo = <K, V>(
+  args: QueryArgs<K, V> = DefaultQueryArgs,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  response: any,
+  countResponse: CountResponse,
+): PaginatedResponse<K> => {
+  const { page, pageSize } = parsePagination(args.paginate);
+
+  let pageCount: number = 0;
+  let itemCount: number = 0;
+
+  if (isNumber(countResponse)) {
+    pageCount = Math.ceil(((countResponse as number) / pageSize) as number);
+    itemCount = countResponse;
+  } else {
+    const count = (countResponse as ObjectCountResponse)?.count;
+    if (isNumber(count)) {
+      pageCount = Math.ceil(count / pageSize);
+      itemCount = count;
+    }
+  }
+  const finalResponse: PaginatedResponse<K> = {
+    results: response.slice(0, pageSize),
+    pageInfo: {
+      currentPage: page,
+      perPage: pageSize,
+      itemCount: itemCount,
+      pageItemCount: Math.min(response.length, pageSize),
+      pageCount: pageCount,
+      hasPreviousPage: page > 0,
+      hasNextPage: page < pageCount - 1,
+    },
+  };
+  return finalResponse;
+};
