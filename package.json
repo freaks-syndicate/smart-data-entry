@@ -11,8 +11,7 @@
     "build:watch": "node_modules/.bin/webpack --watch",
     "start": "node ./dist/app.js",
     "run:watch": "node_modules/.bin/nodemon ./dist/app.js",
-    "prepare": "husky",
-    "postinstall": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "AtharvaCM",
@@ -85,5 +84,6 @@
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "packageManager": "yarn@4.1.0"
 }
