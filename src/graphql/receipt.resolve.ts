@@ -1,3 +1,5 @@
+import { ApolloError } from 'apollo-server-errors';
+
 import { CreateArgs, DataStoreError, DeleteArgs, QueryArgs, UpdateArgs } from '../common/types';
 import { ReceiptModel } from '../models/receipt';
 import { ICreateReceipt, IDeleteReceipt, IReceipt, IReceipts, IUpdateReceipt, IWhereOptionsReceipt } from '../types/Receipt';
@@ -26,6 +28,11 @@ export const resolvers = {
   Mutation: {
     async createReceipt(parent: never, args: CreateArgs<ICreateReceipt>): Promise<IReceipt> {
       const govtIdNumber = args.item.aadharNumber ?? args.item.panNumber;
+
+      if (!govtIdNumber) {
+        throw new ApolloError('Either aadharNumber or panNumber is required', 'VALIDATION_ERROR');
+      }
+
       const sanitizedName = sanitize(args.item.name + govtIdNumber.toString());
       const uuid = uuidFromString(ReceiptModel.name, sanitizedName);
       const { item } = args;
