@@ -6,13 +6,13 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "setup-dev": "corepack enable && corepack prepare yarn@3.6.4 --activate && yarn plugin import typescript && yarn install",
     "dev": "NODE_ENV=local node_modules/.bin/concurrently \"node_modules/.bin/webpack --watch\" \"node_modules/.bin/nodemon ./dist/app.js\"",
     "build": "NODE_ENV=production webpack",
     "build:watch": "node_modules/.bin/webpack --watch",
     "start": "node ./dist/app.js",
     "run:watch": "node_modules/.bin/nodemon ./dist/app.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "if [ \"$NODE_ENV\" != \"production\" ]; then husky install; fi"
   },
   "keywords": [],
   "author": "AtharvaCM",
