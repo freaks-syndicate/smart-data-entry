@@ -19,6 +19,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@apollo/server": "^4.9.5",
+    "@google-cloud/secret-manager": "^5.0.1",
     "@types/uuid": "^9.0.8",
     "adler32-js": "^1.0.2",
     "apollo-server-errors": "^3.3.1",
