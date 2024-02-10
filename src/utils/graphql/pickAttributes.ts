@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { fieldsList } from 'graphql-fields-list';
 import union from 'lodash/union';
 
-import { logger } from '@/logger';
+import { logger } from './../../logger';
 
 export const pickAttributes = (resolvers, info: GraphQLResolveInfo, model: string, path: string, keys: string[] = []) => {
   const fields = path ? fieldsList(info, { path: path }) : fieldsList(info);

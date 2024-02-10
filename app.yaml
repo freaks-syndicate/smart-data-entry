@@ -1,6 +1,0 @@
-runtime: nodejs20
-env: standard
-
-env_variables:
-  DEPLOY_ENV: 'production'
-  APP_LOG_LEVEL: 40

@@ -1,7 +1,5 @@
 import dotenv from 'dotenv';
 
-import { getSecret } from './utils/secretManager';
-
 dotenv.config();
 
 export const LOG_LEVEL = parseInt(process.env.APP_LOG_LEVEL || '40');
@@ -13,7 +11,7 @@ export const LOG_CONFIG = {
 };
 
 export const APP_PORT = parseInt(process.env.APP_PORT ?? '8000');
-export const MONGO_URI = (await getSecret('MONGO_URI')) ?? process.env.MONGO_URI;
+export const MONGO_URI = process.env.MONGO_URI;
 
 export const DEPLOY_ENV = process.env.DEPLOY_ENV || 'prod';
 export const IS_LOCAL = DEPLOY_ENV === 'local';
