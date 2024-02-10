@@ -21,6 +21,7 @@
     "@apollo/server": "^4.9.5",
     "@types/uuid": "^9.0.8",
     "adler32-js": "^1.0.2",
+    "apollo-server-errors": "^3.3.1",
     "body-parser": "^1.18.3",
     "cognito-express": "^3.0.1",
     "cors": "^2.8.5",

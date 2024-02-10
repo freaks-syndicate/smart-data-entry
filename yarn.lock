@@ -3538,6 +3538,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"apollo-server-errors@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "apollo-server-errors@npm:3.3.1"
+  peerDependencies:
+    graphql: ^15.3.0 || ^16.0.0
+  checksum: d09b66e7ac3e2cbc60774280d30118ac4d98f945b5cc1013bb81b9970aae49c0717a550e161fe978d69d7039ec053aeba495890f6eebf452532a2c5e94071a80
+  languageName: node
+  linkType: hard
+
 "argparse@npm:^1.0.7":
   version: 1.0.10
   resolution: "argparse@npm:1.0.10"
@@ -9493,6 +9502,7 @@ __metadata:
     "@typescript-eslint/parser": ^6.21.0
     "@yarnpkg/pnpify": ^4.0.0-rc.32
     adler32-js: ^1.0.2
+    apollo-server-errors: ^3.3.1
     body-parser: ^1.18.3
     cognito-express: ^3.0.1
     concurrently: ^8.2.2
