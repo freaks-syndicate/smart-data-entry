@@ -19,7 +19,6 @@ RUN yarn install --immutable
 COPY . .
 
 ENV NODE_ENV=production
-ENV PORT=8080
 
 # Build your application
 RUN yarn build

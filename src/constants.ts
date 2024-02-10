@@ -10,7 +10,7 @@ export const LOG_CONFIG = {
   },
 };
 
-export const APP_PORT = parseInt(process.env.APP_PORT ?? '8000');
+export const APP_PORT = parseInt(process.env.PORT ?? '8000');
 export const MONGO_URI = process.env.MONGO_URI;
 
 export const DEPLOY_ENV = process.env.DEPLOY_ENV || 'prod';
