@@ -102,12 +102,12 @@ type Receipt {
   receiptNumber: Int!
   year: Int
   date: Date
-  mobileNumber: Int
+  mobileNumber: String
   name: String
   address: String
   amount: Int!
-  aadharNumber: Int
-  panNumber: Int
+  aadharNumber: String
+  panNumber: String
 }
 
 type Receipts {
@@ -126,11 +126,7 @@ input WhereOptionsReceipts {
 
 type Query {
   ReceiptsAll: [Receipt]
-  Receipts(
-    where: WhereOptionsReceipts
-    paginate: PaginationInput
-    sort: SortInput
-  ): Receipts
+  Receipts(where: WhereOptionsReceipts, paginate: PaginationInput, sort: SortInput): Receipts
   Receipt(where: WhereOptionsReceipts): Receipt
 }
 
@@ -138,24 +134,24 @@ input CreateReceipt {
   receiptNumber: Int!
   year: Int
   date: Date
-  mobileNumber: Int
+  mobileNumber: String
   name: String
   address: String
   amount: Int!
-  aadharNumber: Int
-  panNumber: Int
+  aadharNumber: String
+  panNumber: String
 }
 
 input UpdateReceipt {
   receiptNumber: Int!
   year: Int
   date: Date
-  mobileNumber: Int
+  mobileNumber: String
   name: String
   address: String
   amount: Int!
-  aadharNumber: Int
-  panNumber: Int
+  aadharNumber: String
+  panNumber: String
 }
 
 type Mutation {

@@ -8,11 +8,11 @@ export interface IReceipt {
   receiptNumber: number;
   year?: number;
   date?: Date;
-  mobileNumber?: number;
+  mobileNumber?: string;
   name: string;
   address?: string;
   amount: number;
-  aadharNumber?: number;
+  aadharNumber?: string;
   panNumber?: string;
 }
 
