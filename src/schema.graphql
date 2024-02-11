@@ -121,7 +121,8 @@ input WhereOptionsReceipts {
 
   id: String
   uuid: String
-  designation: String
+  address: String
+  amount: IntFilterConstraint
 }
 
 type Query {
