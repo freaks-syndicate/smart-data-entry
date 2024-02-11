@@ -136,7 +136,7 @@ input CreateReceipt {
   year: Int
   date: Date
   mobileNumber: String
-  name: String
+  name: String!
   address: String
   amount: Int!
   aadharNumber: String
