@@ -58,8 +58,13 @@ export const resolvers = {
       const { item, id } = args;
 
       try {
-        const result = await ReceiptModel.findByIdAndUpdate(id, item, { new: true });
-        return result;
+        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true });
+
+        if (!updatedReceipt) {
+          throw new ApolloError('Receipt not found', 'NOT_FOUND');
+        }
+
+        return updatedReceipt;
       } catch (error) {
         console.error(`Receipt.update [${id}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error updating Receipt'));
@@ -70,6 +75,11 @@ export const resolvers = {
 
       try {
         const deletedReceipt = await ReceiptModel.findByIdAndDelete(id);
+
+        if (!deletedReceipt) {
+          throw new ApolloError('Receipt not found', 'NOT_FOUND');
+        }
+
         return deletedReceipt;
       } catch (error) {
         console.error(`Receipt.delete [${id}]`, error);
