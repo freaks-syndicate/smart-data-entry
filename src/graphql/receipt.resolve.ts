@@ -58,7 +58,7 @@ export const resolvers = {
       const { item, id } = args;
 
       try {
-        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true });
+        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true, runValidators: true });
 
         if (!updatedReceipt) {
           throw new ApolloError('Receipt not found', 'NOT_FOUND');
