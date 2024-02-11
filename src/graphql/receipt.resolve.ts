@@ -21,6 +21,9 @@ export const resolvers = {
       return withPageInfo(args, response, countResponse);
     },
     async Receipt(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipt> {
+      if (!args.where || Object.keys(args.where).length === 0) {
+        throw new ApolloError('A "where" condition is required.', 'WHERE_CONDITION_REQUIRED');
+      }
       const query = { ...args.where };
       return await ReceiptModel.findOne(parseMongoQuery(query));
     },
@@ -55,7 +58,7 @@ export const resolvers = {
       const { item, id } = args;
 
       try {
-        const result = await ReceiptModel.findByIdAndUpdate(id, item);
+        const result = await ReceiptModel.findByIdAndUpdate(id, item, { new: true });
         return result;
       } catch (error) {
         console.error(`Receipt.update [${id}]`, error);
