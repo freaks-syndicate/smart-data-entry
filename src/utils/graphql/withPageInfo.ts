@@ -6,8 +6,7 @@ import { parsePagination } from './parsePagination';
 
 export const withPageInfo = <K, V>(
   args: QueryArgs<K, V> = DefaultQueryArgs,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  response: any,
+  response: Array<K>,
   countResponse: CountResponse,
 ): PaginatedResponse<K> => {
   const { page, pageSize } = parsePagination(args.paginate);
@@ -26,7 +25,7 @@ export const withPageInfo = <K, V>(
     }
   }
   const finalResponse: PaginatedResponse<K> = {
-    results: response.slice(0, pageSize),
+    results: response.slice(page, pageSize),
     pageInfo: {
       currentPage: page,
       perPage: pageSize,

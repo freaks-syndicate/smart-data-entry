@@ -143,13 +143,13 @@ input CreateReceipt {
 }
 
 input UpdateReceipt {
-  receiptNumber: Int!
+  receiptNumber: Int
   year: Int
   date: Date
   mobileNumber: String
   name: String
   address: String
-  amount: Int!
+  amount: Int
   aadharNumber: String
   panNumber: String
 }
