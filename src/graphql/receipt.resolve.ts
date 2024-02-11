@@ -4,7 +4,7 @@ import { CreateArgs, DataStoreError, DeleteArgs, QueryArgs, UpdateArgs } from '.
 import { ReceiptModel } from '../models/receipt';
 import { ICreateReceipt, IDeleteReceipt, IReceipt, IReceipts, IUpdateReceipt, IWhereOptionsReceipt } from '../types/Receipt';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
-import { parseMongoQuery } from '../utils/graphql/parseMongoQuery';
+import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
 import { withPageInfo } from '../utils/graphql/withPageInfo';
 import { sanitize } from '../utils/stringUtils';
 import { uuidFromString } from '../utils/uuid';
@@ -16,7 +16,7 @@ export const resolvers = {
     },
     async Receipts(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipts> {
       const query = { ...args.where };
-      const response = await ReceiptModel.find(query);
+      const response = await ReceiptModel.find(parseWhereArgsToMongoQuery(query));
       const countResponse = await ReceiptModel.countDocuments(query);
       return withPageInfo(args, response, countResponse);
     },
@@ -25,7 +25,7 @@ export const resolvers = {
         throw new ApolloError('A "where" condition is required.', 'WHERE_CONDITION_REQUIRED');
       }
       const query = { ...args.where };
-      return await ReceiptModel.findOne(parseMongoQuery(query));
+      return await ReceiptModel.findOne(parseWhereArgsToMongoQuery(query));
     },
   },
   Mutation: {
