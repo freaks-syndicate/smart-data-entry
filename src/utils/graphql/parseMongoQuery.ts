@@ -60,7 +60,7 @@ export function parseWhereArgsToMongoQuery(whereArgs) {
       const value = whereArgs[key];
       if (typeof value === 'object' && !Array.isArray(value)) {
         // Handle constraint objects by converting them to MongoDB query operators
-        const constraint = {};
+        const constraint: MongoQueryOperators<QueryValue> = {};
         Object.entries(value).forEach(([constraintKey, constraintValue]) => {
           // Here you can add more sophisticated mapping between GraphQL and MongoDB operators if needed
           const mongoOperator = `$${constraintKey}`;

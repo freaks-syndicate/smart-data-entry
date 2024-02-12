@@ -16,15 +16,20 @@ export const resolvers = {
     },
     async Receipts(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipts> {
       const query = { ...args.where };
-      const response = await ReceiptModel.find(parseWhereArgsToMongoQuery(query));
-      const countResponse = await ReceiptModel.countDocuments(query);
+      const parsedQuery = parseWhereArgsToMongoQuery(query);
+
+      const response = await ReceiptModel.find(parsedQuery);
+      const countResponse = await ReceiptModel.countDocuments(parsedQuery);
+
       return withPageInfo(args, response, countResponse);
     },
     async Receipt(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipt> {
       if (!args.where || Object.keys(args.where).length === 0) {
         throw new ApolloError('A "where" condition is required.', 'WHERE_CONDITION_REQUIRED');
       }
+
       const query = { ...args.where };
+
       return await ReceiptModel.findOne(parseWhereArgsToMongoQuery(query));
     },
   },
