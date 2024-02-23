@@ -12,6 +12,11 @@ enum Gender {
   OTHERS
 }
 
+enum IdCode {
+  Aadhar
+  PAN
+}
+
 input SortColumn {
   field: String
   order: SortOrder
@@ -100,7 +105,7 @@ type Receipt {
   id: ID!
   uuid: String!
   receiptNumber: Int!
-  year: Int
+  financialYear: Int
   date: Date
   mobileNumber: String
   name: String
@@ -108,6 +113,7 @@ type Receipt {
   amount: Int!
   aadharNumber: String
   panNumber: String
+  idCode: IdCode!
 }
 
 type Receipts {
@@ -115,25 +121,37 @@ type Receipts {
   pageInfo: PageInfo
 }
 
-input WhereOptionsReceipts {
-  and: [WhereOptionsReceipts]
-  or: [WhereOptionsReceipts]
-
-  id: String
-  uuid: String
-  address: String
+input WhereOptionsReceiptFields {
+  id: StringFilterConstraint
+  uuid: StringFilterConstraint
+  address: StringFilterConstraint
+  receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
+  financialYear: IntFilterConstraint
+}
+
+input WhereOptionsReceipt {
+  and: [WhereOptionsReceiptFields]
+  or: [WhereOptionsReceiptFields]
+
+  id: StringFilterConstraint
+  uuid: StringFilterConstraint
+  address: StringFilterConstraint
+  receiptNumber: IntFilterConstraint
+  amount: IntFilterConstraint
+  idCode: StringFilterConstraint
+  financialYear: IntFilterConstraint
 }
 
 type Query {
   ReceiptsAll: [Receipt]
-  Receipts(where: WhereOptionsReceipts, paginate: PaginationInput, sort: SortInput): Receipts
-  Receipt(where: WhereOptionsReceipts): Receipt
+  Receipts(where: WhereOptionsReceipt, paginate: PaginationInput, sort: SortInput): Receipts
+  Receipt(where: WhereOptionsReceipt): Receipt
 }
 
 input CreateReceipt {
   receiptNumber: Int!
-  year: Int
+  financialYear: Int
   date: Date
   mobileNumber: String
   name: String!
@@ -145,7 +163,7 @@ input CreateReceipt {
 
 input UpdateReceipt {
   receiptNumber: Int
-  year: Int
+  financialYear: Int
   date: Date
   mobileNumber: String
   name: String

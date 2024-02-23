@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-errors';
 
 import { CreateArgs, DataStoreError, DeleteArgs, QueryArgs, UpdateArgs } from '../common/types';
 import { ReceiptModel } from '../models/receipt';
-import { ICreateReceipt, IDeleteReceipt, IReceipt, IReceipts, IUpdateReceipt, IWhereOptionsReceipt } from '../types/Receipt';
+import { ICreateReceipt, IdCode, IDeleteReceipt, IReceipt, IReceipts, IUpdateReceipt, IWhereOptionsReceipt } from '../types/Receipt';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
 import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
 import { withPageInfo } from '../utils/graphql/withPageInfo';
@@ -41,13 +41,16 @@ export const resolvers = {
         throw new ApolloError('Either aadharNumber or panNumber is required', 'VALIDATION_ERROR');
       }
 
+      const idCode = args.item.aadharNumber ? IdCode.AADHAR : args.item.panNumber ? IdCode.PAN : null;
+
       const sanitizedName = sanitize(args.item.name + govtIdNumber.toString());
       const uuid = uuidFromString(ReceiptModel.name, sanitizedName);
       const { item } = args;
 
       const newReceipt = new ReceiptModel({
-        uuid,
         ...item,
+        uuid,
+        idCode,
       });
 
       try {

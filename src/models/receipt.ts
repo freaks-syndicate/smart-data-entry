@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-import { IReceipt } from '../types/Receipt';
+import { IdCode, IReceipt } from '../types/Receipt';
 
 const indianMobileNumberPattern = /^[6-9]\d{9}$/;
 const panNumberPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
@@ -8,7 +8,7 @@ const panNumberPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 const ReceiptSchema = new Schema<IReceipt>({
   uuid: { type: String, required: true, unique: true },
   receiptNumber: { type: Number, required: true, unique: true },
-  year: { type: Number, required: false },
+  financialYear: { type: Number, required: false },
   date: { type: Date, required: false },
   mobileNumber: {
     type: String,
@@ -37,6 +37,11 @@ const ReceiptSchema = new Schema<IReceipt>({
     type: String,
     required: false,
     match: [panNumberPattern, 'Please enter a valid PAN number'],
+  },
+  idCode: {
+    type: String,
+    enum: IdCode,
+    required: true,
   },
 });
 

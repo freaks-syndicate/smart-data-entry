@@ -2,11 +2,16 @@
 
 import { IntFilterConstraint, PageInfo, StringFilterConstraint } from '../common/types';
 
+export enum IdCode {
+  AADHAR = 'Aadhar',
+  PAN = 'PAN',
+}
+
 // FIXME: Keeping receiptNumber required for POC and rest are optional
 export interface IReceipt {
   uuid: string;
   receiptNumber: number;
-  year?: number;
+  financialYear?: number;
   date?: Date;
   mobileNumber?: string;
   name: string;
@@ -14,6 +19,7 @@ export interface IReceipt {
   amount: number;
   aadharNumber?: string;
   panNumber?: string;
+  idCode: IdCode;
 }
 
 export interface IReceipts {
@@ -23,7 +29,7 @@ export interface IReceipts {
 
 export interface ICreateReceipt {
   receiptNumber: number;
-  year?: number;
+  financialYear?: number;
   date?: Date;
   mobileNumber?: number;
   name: string;
@@ -35,7 +41,7 @@ export interface ICreateReceipt {
 
 export interface IUpdateReceipt {
   receiptNumber?: number;
-  year?: number;
+  financialYear?: number;
   date?: Date;
   mobileNumber?: number;
   name?: string;
@@ -52,5 +58,9 @@ export interface IDeleteReceipt {
 export interface IWhereOptionsReceipt {
   id: StringFilterConstraint;
   uuid: StringFilterConstraint;
+  address: StringFilterConstraint;
   receiptNumber: IntFilterConstraint;
+  amount: IntFilterConstraint;
+  idCode: StringFilterConstraint;
+  financialYear: IntFilterConstraint;
 }
