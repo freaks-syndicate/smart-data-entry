@@ -8,7 +8,7 @@ module.exports = {
   target: 'node',
   externalsPresets: { node: true }, // in order to ignore built-in modules like path, fs, etc.
   externals: [nodeExternals()],
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
   entry: './src/app.ts',
   output: { path: path.resolve(__dirname, 'dist'), filename: 'app.js' },
   resolve: {
@@ -17,13 +17,16 @@ module.exports = {
   experiments: {
     topLevelAwait: true,
   },
+  optimization: {
+    minimize: false,
+  },
   module: {
     rules: [
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
-        exclude: [/node_modules/, /lib/],
+        exclude: [/node_modules/, /lib/, /platform/, /dist/, /\.yarn/, /test\/performance/],
       },
       {
         test: /\.graphql$/,
