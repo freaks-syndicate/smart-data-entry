@@ -1,11 +1,10 @@
 {
   "root": true,
   "plugins": ["@typescript-eslint", "simple-import-sort"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+  "globals": {
+    "__ENV": "readonly"
+  },
   "rules": {
     "no-console": ["warn", { "allow": ["info", "error"] }],
     "quotes": ["error", "single"],

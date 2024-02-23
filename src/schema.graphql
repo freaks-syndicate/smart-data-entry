@@ -113,7 +113,7 @@ type Receipt {
   amount: Int!
   aadharNumber: String
   panNumber: String
-  idCode: IdCode!
+  idCode: IdCode
 }
 
 type Receipts {

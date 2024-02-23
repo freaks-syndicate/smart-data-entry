@@ -1,7 +1,8 @@
 {
   "name": "smart-data-entry",
   "version": "1.0.0",
-  "description": "",
+  "description": "Smart Data Entry API",
+  "packageManager": "yarn@4.1.0",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -12,7 +13,8 @@
     "build:watch": "node_modules/.bin/webpack --watch",
     "start": "node ./dist/app.js",
     "run:watch": "node_modules/.bin/nodemon ./dist/app.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "k6:load": "k6 run --vus ${K6_VUS:-20} --duration ${K6_DURATION:-10m} ./test/performance/script.k6.js"
   },
   "keywords": [],
   "author": "AtharvaCM",
@@ -84,6 +86,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "packageManager": "yarn@4.1.0"
+  }
 }
