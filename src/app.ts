@@ -10,6 +10,9 @@ import cors from 'cors';
 import express from 'express';
 import robots from 'express-robots-txt';
 import http from 'http';
+import supertokens from 'supertokens-node';
+import { middleware } from 'supertokens-node/framework/express';
+import { errorHandler } from 'supertokens-node/framework/express';
 
 import { APP_PORT, DEPLOY_ENV } from './constants';
 import { connectToMongo } from './database';
@@ -17,16 +20,27 @@ import { gqlModules, scalars } from './graphql/all.types';
 import { logger } from './logger';
 import { errorLogPlugin } from './plugins/apolloErrorLogging';
 import typeDefs from './schema.graphql';
+import { ensureSuperTokensInit } from './utils/supertokens/init-supertokens';
 
 const app = express();
 const isProd = DEPLOY_ENV == 'prod';
 const httpServer = http.createServer(app);
 
+ensureSuperTokensInit();
+
 app.disable('x-powered-by');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(robots({ UserAgent: '*', Disallow: '/' }));
-app.use(cors());
+app.use(
+  cors({
+    origin: ['https://smart-data-entry-ui.vercel.app', 'http://localhost:3000'],
+    allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
+    credentials: true,
+  }),
+);
+
+app.use(middleware());
 
 const playgroundPlugin = isProd
   ? ApolloServerPluginLandingPageProductionDefault()
@@ -79,6 +93,8 @@ await server.start();
 connectToMongo();
 
 app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server));
+
+app.use(errorHandler());
 
 await new Promise<void>((resolve) => {
   const s = httpServer.listen({ port: APP_PORT }, resolve);

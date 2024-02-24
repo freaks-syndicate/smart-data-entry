@@ -16,3 +16,9 @@ export const MONGO_URI = process.env.MONGO_URI;
 export const DEPLOY_ENV = process.env.DEPLOY_ENV || 'prod';
 export const IS_LOCAL = DEPLOY_ENV === 'local';
 export const INTROSPECTION_TOKEN = process.env.INTROSPECTION_TOKEN ?? '';
+
+// Supertokens
+export const SUPERTOKENS_CONNECTION_URI = process.env.SUPERTOKENS_CONNECTION_URI;
+export const SUPERTOKENS_API_KEY = process.env.SUPERTOKENS_API_KEY;
+export const SUPERTOKENS_APP_DOMAIN = process.env.SUPERTOKENS_APP_DOMAIN;
+export const SUPERTOKENS_API_DOMAIN = process.env.SUPERTOKENS_API_DOMAIN;
