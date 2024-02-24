@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-import { IdCode, IReceipt } from '../types/Receipt';
+import { IdCode, IReceipt, ModeOfPayment } from '../types/Receipt';
 
 const indianMobileNumberPattern = /^[6-9]\d{9}$/;
 const panNumberPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
@@ -27,6 +27,7 @@ const ReceiptSchema = new Schema<IReceipt>({
     required: [true, 'Amount is required'],
     min: [1, 'Amount should be at least 1'],
   },
+  modeOfPayment: { type: String, required: true, default: ModeOfPayment.CASH, enum: ModeOfPayment },
   aadharNumber: {
     type: String,
     required: false,

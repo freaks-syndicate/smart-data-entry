@@ -12,11 +12,6 @@ enum Gender {
   OTHERS
 }
 
-enum IdCode {
-  Aadhar
-  PAN
-}
-
 input SortColumn {
   field: String
   order: SortOrder
@@ -100,6 +95,18 @@ input BooleanFilterConstraint {
   is: String
 }
 
+"Receipt Enums"
+enum IdCode {
+  Aadhar
+  PAN
+}
+
+enum ModeOfPayment {
+  cash
+  cheque
+  online
+}
+
 "Receipt Schema"
 type Receipt {
   id: ID!
@@ -111,6 +118,7 @@ type Receipt {
   name: String
   address: String
   amount: Int!
+  modeOfPayment: ModeOfPayment!
   aadharNumber: String
   panNumber: String
   idCode: IdCode
@@ -127,6 +135,7 @@ input WhereOptionsReceiptFields {
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
+  modeOfPayment: StringFilterConstraint
   financialYear: StringFilterConstraint
 }
 
@@ -139,6 +148,7 @@ input WhereOptionsReceipt {
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
+  modeOfPayment: StringFilterConstraint
   idCode: StringFilterConstraint
   financialYear: StringFilterConstraint
 }
@@ -156,6 +166,7 @@ input CreateReceipt {
   mobileNumber: String
   name: String!
   address: String
+  modeOfPayment: String!
   amount: Int!
   aadharNumber: String
   panNumber: String
@@ -169,6 +180,7 @@ input UpdateReceipt {
   name: String
   address: String
   amount: Int
+  modeOfPayment: String
   aadharNumber: String
   panNumber: String
 }

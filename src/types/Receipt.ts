@@ -7,6 +7,12 @@ export enum IdCode {
   PAN = 'PAN',
 }
 
+export enum ModeOfPayment {
+  CASH = 'cash',
+  CHEQUE = 'cheque',
+  ONLINE = 'online',
+}
+
 // FIXME: Keeping receiptNumber required for POC and rest are optional
 export interface IReceipt {
   uuid: string;
@@ -17,6 +23,7 @@ export interface IReceipt {
   name: string;
   address?: string;
   amount: number;
+  modeOfPayment: ModeOfPayment;
   aadharNumber?: string;
   panNumber?: string;
   idCode: IdCode;
@@ -35,6 +42,7 @@ export interface ICreateReceipt {
   name: string;
   address?: string;
   amount: number;
+  modeOfPayment: ModeOfPayment;
   aadharNumber?: number;
   panNumber?: string;
 }
@@ -47,6 +55,7 @@ export interface IUpdateReceipt {
   name?: string;
   address?: string;
   amount?: number;
+  modeOfPayment?: ModeOfPayment;
   aadharNumber?: number;
   panNumber?: string;
 }
@@ -61,6 +70,7 @@ export interface IWhereOptionsReceipt {
   address: StringFilterConstraint;
   receiptNumber: IntFilterConstraint;
   amount: IntFilterConstraint;
+  modeOfPayment: StringFilterConstraint;
   idCode: StringFilterConstraint;
   financialYear: StringFilterConstraint;
 }
