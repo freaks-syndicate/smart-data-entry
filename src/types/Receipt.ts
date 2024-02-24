@@ -11,7 +11,7 @@ export enum IdCode {
 export interface IReceipt {
   uuid: string;
   receiptNumber: number;
-  financialYear?: number;
+  financialYear?: string;
   date?: Date;
   mobileNumber?: string;
   name: string;
@@ -29,7 +29,7 @@ export interface IReceipts {
 
 export interface ICreateReceipt {
   receiptNumber: number;
-  financialYear?: number;
+  financialYear?: string;
   date?: Date;
   mobileNumber?: number;
   name: string;
@@ -41,7 +41,7 @@ export interface ICreateReceipt {
 
 export interface IUpdateReceipt {
   receiptNumber?: number;
-  financialYear?: number;
+  financialYear?: string;
   date?: Date;
   mobileNumber?: number;
   name?: string;
@@ -62,5 +62,5 @@ export interface IWhereOptionsReceipt {
   receiptNumber: IntFilterConstraint;
   amount: IntFilterConstraint;
   idCode: StringFilterConstraint;
-  financialYear: IntFilterConstraint;
+  financialYear: StringFilterConstraint;
 }

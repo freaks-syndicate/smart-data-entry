@@ -4,11 +4,16 @@ import { IdCode, IReceipt } from '../types/Receipt';
 
 const indianMobileNumberPattern = /^[6-9]\d{9}$/;
 const panNumberPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+const financialYearPattern = /^[0-9]{4}-[0-9]{4}$/;
 
 const ReceiptSchema = new Schema<IReceipt>({
   uuid: { type: String, required: true, unique: true },
   receiptNumber: { type: Number, required: true, unique: true },
-  financialYear: { type: Number, required: false },
+  financialYear: {
+    type: String,
+    required: false,
+    match: [financialYearPattern, 'Please enter a valid financial year (2023-2024)'],
+  },
   date: { type: Date, required: false },
   mobileNumber: {
     type: String,

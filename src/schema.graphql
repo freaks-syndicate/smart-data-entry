@@ -105,7 +105,7 @@ type Receipt {
   id: ID!
   uuid: String!
   receiptNumber: Int!
-  financialYear: Int
+  financialYear: String
   date: Date
   mobileNumber: String
   name: String
@@ -127,7 +127,7 @@ input WhereOptionsReceiptFields {
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
-  financialYear: IntFilterConstraint
+  financialYear: StringFilterConstraint
 }
 
 input WhereOptionsReceipt {
@@ -140,7 +140,7 @@ input WhereOptionsReceipt {
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
   idCode: StringFilterConstraint
-  financialYear: IntFilterConstraint
+  financialYear: StringFilterConstraint
 }
 
 type Query {
@@ -151,7 +151,7 @@ type Query {
 
 input CreateReceipt {
   receiptNumber: Int!
-  financialYear: Int
+  financialYear: String
   date: Date
   mobileNumber: String
   name: String!
@@ -163,7 +163,7 @@ input CreateReceipt {
 
 input UpdateReceipt {
   receiptNumber: Int
-  financialYear: Int
+  financialYear: String
   date: Date
   mobileNumber: String
   name: String
