@@ -174,6 +174,7 @@ export type Query = {
   Receipt?: Maybe<Receipt>;
   Receipts?: Maybe<Receipts>;
   ReceiptsAll?: Maybe<Array<Maybe<Receipt>>>;
+  User?: Maybe<User>;
   UserRole?: Maybe<UserRole>;
   UserRolesAll?: Maybe<Array<Maybe<UserRole>>>;
 };
@@ -188,6 +189,11 @@ export type QueryReceiptsArgs = {
   paginate?: InputMaybe<PaginationInput>;
   sort?: InputMaybe<SortInput>;
   where?: InputMaybe<WhereOptionsReceipt>;
+};
+
+
+export type QueryUserArgs = {
+  where?: InputMaybe<WhereOptionsUser>;
 };
 
 
@@ -267,6 +273,14 @@ export type UpdateUserRole = {
   permissions?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type User = {
+  __typename?: 'User';
+  firstName?: Maybe<Scalars['String']['output']>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  roles?: Maybe<Array<Maybe<UserRole>>>;
+  userId: Scalars['String']['output'];
+};
+
 export type UserRole = {
   __typename?: 'UserRole';
   name: Scalars['String']['output'];
@@ -300,6 +314,10 @@ export type WhereOptionsReceiptFields = {
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
   receiptNumber?: InputMaybe<IntFilterConstraint>;
   uuid?: InputMaybe<StringFilterConstraint>;
+};
+
+export type WhereOptionsUser = {
+  userId: Scalars['String']['input'];
 };
 
 export type WhereOptionsUserRole = {
@@ -408,10 +426,12 @@ export type ResolversTypes = {
   StringFilterConstraint: StringFilterConstraint;
   UpdateReceipt: UpdateReceipt;
   UpdateUserRole: UpdateUserRole;
+  User: ResolverTypeWrapper<User>;
   UserRole: ResolverTypeWrapper<UserRole>;
   UserRoles: ResolverTypeWrapper<UserRoles>;
   WhereOptionsReceipt: WhereOptionsReceipt;
   WhereOptionsReceiptFields: WhereOptionsReceiptFields;
+  WhereOptionsUser: WhereOptionsUser;
   WhereOptionsUserRole: WhereOptionsUserRole;
 };
 
@@ -444,10 +464,12 @@ export type ResolversParentTypes = {
   StringFilterConstraint: StringFilterConstraint;
   UpdateReceipt: UpdateReceipt;
   UpdateUserRole: UpdateUserRole;
+  User: User;
   UserRole: UserRole;
   UserRoles: UserRoles;
   WhereOptionsReceipt: WhereOptionsReceipt;
   WhereOptionsReceiptFields: WhereOptionsReceiptFields;
+  WhereOptionsUser: WhereOptionsUser;
   WhereOptionsUserRole: WhereOptionsUserRole;
 };
 
@@ -484,6 +506,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   Receipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, Partial<QueryReceiptArgs>>;
   Receipts?: Resolver<Maybe<ResolversTypes['Receipts']>, ParentType, ContextType, Partial<QueryReceiptsArgs>>;
   ReceiptsAll?: Resolver<Maybe<Array<Maybe<ResolversTypes['Receipt']>>>, ParentType, ContextType>;
+  User?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
   UserRole?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType, Partial<QueryUserRoleArgs>>;
   UserRolesAll?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserRole']>>>, ParentType, ContextType>;
 };
@@ -511,6 +534,14 @@ export type ReceiptsResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  roles?: Resolver<Maybe<Array<Maybe<ResolversTypes['UserRole']>>>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserRoleResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserRole'] = ResolversParentTypes['UserRole']> = {
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   permissions?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
@@ -531,6 +562,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Receipt?: ReceiptResolvers<ContextType>;
   Receipts?: ReceiptsResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
   UserRole?: UserRoleResolvers<ContextType>;
   UserRoles?: UserRolesResolvers<ContextType>;
 };

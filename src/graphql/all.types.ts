@@ -2,8 +2,9 @@ import { DateTimeResolver } from 'graphql-scalars';
 
 import * as Common from './common.resolve';
 import * as Receipt from './receipt.resolve';
+import * as User from './user.resolve';
 import * as UserRole from './user_role.resolve';
 
 export const scalars = [{ Date: DateTimeResolver }];
 
-export const gqlModules = [Common, Receipt, UserRole];
+export const gqlModules = [Common, Receipt, User, UserRole];

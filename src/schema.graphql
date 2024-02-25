@@ -95,6 +95,22 @@ input BooleanFilterConstraint {
   is: String
 }
 
+# ======= User =======
+type User {
+  userId: String!
+  firstName: String
+  lastName: String
+  roles: [UserRole]
+}
+
+input WhereOptionsUser {
+  userId: String!
+}
+
+type Query {
+  User(where: WhereOptionsUser): User
+}
+
 # ======= UserRole =======
 type UserRole {
   name: String!
