@@ -95,7 +95,54 @@ input BooleanFilterConstraint {
   is: String
 }
 
-"Receipt Enums"
+# ======= UserRole =======
+type UserRole {
+  name: String!
+  permissions: [String!]!
+}
+
+type UserRoles {
+  results: [UserRole]
+  pageInfo: PageInfo
+}
+
+input WhereOptionsUserRole {
+  name: StringFilterConstraint
+}
+
+type Query {
+  UserRolesAll: [UserRole]
+  UserRole(where: WhereOptionsUserRole): UserRole
+}
+
+input CreateUserRole {
+  name: String!
+  permissions: [String!]!
+}
+
+input UpdateUserRole {
+  name: String
+  permissions: [String!]
+}
+
+input AssignUserRole {
+  userId: ID!
+  roleName: String!
+}
+
+input RemoveUserRole {
+  userId: ID!
+  roleName: String!
+}
+
+type Mutation {
+  createUserRole(item: CreateUserRole!): Boolean
+  deleteUserRole(name: String!): Boolean
+  assignRoleToUser(item: AssignUserRole): Boolean
+  removeRoleFromUser(item: RemoveUserRole): Boolean
+}
+
+# ======= Receipt =======
 enum IdCode {
   Aadhar
   PAN

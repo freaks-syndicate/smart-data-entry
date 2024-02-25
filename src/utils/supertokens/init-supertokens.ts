@@ -3,6 +3,7 @@ import { TypeInput } from 'supertokens-node/lib/build/types';
 import Dashboard from 'supertokens-node/recipe/dashboard';
 import Session from 'supertokens-node/recipe/session';
 import ThirdPartyEmailPassword from 'supertokens-node/recipe/thirdpartyemailpassword';
+import UserRoles from 'supertokens-node/recipe/userroles';
 
 import { SUPERTOKENS_API_DOMAIN, SUPERTOKENS_API_KEY, SUPERTOKENS_APP_DOMAIN, SUPERTOKENS_CONNECTION_URI } from '../../constants';
 
@@ -65,7 +66,8 @@ export const backendConfig = (): TypeInput => ({
       ],
     }),
     Dashboard.init(),
-    Session.init(), // initializes session features
+    Session.init(),
+    UserRoles.init(),
   ],
 });
 
