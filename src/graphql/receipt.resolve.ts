@@ -1,8 +1,18 @@
 import { ApolloError } from 'apollo-server-errors';
+import mongoose from 'mongoose';
 
-import { CreateArgs, DataStoreError, DeleteArgs, QueryArgs, UpdateArgs } from '../common/types';
+import {
+  CreateArgs,
+  DataStoreError,
+  DeleteArgs,
+  ForbiddenError,
+  GraphQLRequestContextWithAuth,
+  QueryArgs,
+  UpdateArgs,
+} from '../common/types';
 import { CreateReceipt, IdCode, Receipt, Receipts, UpdateReceipt, WhereOptionsReceipt } from '../generated/graphql';
 import { ReceiptModel } from '../models/receipt';
+import { ReceiptBookModel } from '../models/receipt_book';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
 import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
 import { withPageInfo } from '../utils/graphql/withPageInfo';
@@ -34,7 +44,14 @@ export const resolvers = {
     },
   },
   Mutation: {
-    async createReceipt(parent: never, args: CreateArgs<CreateReceipt>): Promise<Receipt> {
+    async createReceipt(parent: never, args: CreateArgs<CreateReceipt>, context: GraphQLRequestContextWithAuth): Promise<Receipt> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!args.item || Object.keys(args.item).length === 0) {
+        throw new ApolloError('An "item" CreateReceipt object is required.', 'CREATE_ARGS_REQUIRED');
+      }
+
       const govtIdNumber = args.item.aadharNumber ?? args.item.panNumber;
 
       if (!govtIdNumber) {
@@ -47,51 +64,135 @@ export const resolvers = {
       const uuid = uuidFromString(ReceiptModel.name, sanitizedName);
       const { item } = args;
 
-      const newReceipt = new ReceiptModel({
-        ...item,
-        uuid,
-        idCode,
-      });
+      // Using transactions to prevent race conditions
+      const session = await mongoose.startSession();
+      session.startTransaction();
 
       try {
-        await newReceipt.save();
+        const receiptBook = await ReceiptBookModel.findById(args.item.receiptBookId).session(session);
+        if (!receiptBook) {
+          throw new ApolloError('ReceiptBook not found', 'RECEIPTBOOK_NOT_FOUND');
+        }
+
+        if (receiptBook.usedReceipts >= receiptBook.totalReceipts) {
+          throw new ApolloError('ReceiptBook is full', 'RECEIPTBOOK_FULL');
+        }
+
+        // Seems prone to error, 14 + 1 = 15 full, delete 1 = 14, 14 + 1 = 15 dupplicate
+        // const nextReceiptNumber = receiptBook.receiptSeries + receiptBook.usedReceipts;
+
+        const lastReceipt = await ReceiptModel.findOne({ receiptBook: args.item.receiptBookId }).sort({ receiptNumber: -1 });
+        const nextReceiptNumber = lastReceipt ? lastReceipt.receiptNumber + 1 : 1;
+
+        const newReceipt = new ReceiptModel({
+          ...item,
+          uuid,
+          idCode,
+          receiptNumber: nextReceiptNumber,
+          receiptBook: receiptBook.id,
+        });
+
+        await newReceipt.save({ session });
+
+        receiptBook.usedReceipts += 1;
+        await receiptBook.save({ session });
+
+        await session.commitTransaction();
+        return newReceipt;
       } catch (error) {
-        console.error(`Receipt.create description=[${sanitizedName}] uuid=[${uuid}]`, error);
+        await session.abortTransaction();
+        console.error(`Receipt.create uuid=[${uuid}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error creating Receipt'));
+      } finally {
+        session.endSession();
+      }
+    },
+    async updateReceipt(parent: never, args: UpdateArgs<UpdateReceipt>, context: GraphQLRequestContextWithAuth): Promise<Receipt> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!args.item || Object.keys(args.item).length === 0) {
+        throw new ApolloError('An "item" UpdateReceipt object is required.', 'UPDATE_ARGS_REQUIRED');
       }
 
-      return newReceipt;
-    },
-    async updateReceipt(parent: never, args: UpdateArgs<UpdateReceipt>): Promise<Receipt> {
-      const { item, id } = args;
+      const session = await mongoose.startSession();
+      session.startTransaction();
 
       try {
-        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true, runValidators: true });
+        const { item, id } = args;
+        const receiptToUpdate = await ReceiptModel.findById(id).session(session);
 
-        if (!updatedReceipt) {
+        if (!receiptToUpdate) {
           throw new ApolloError('Receipt not found', 'NOT_FOUND');
         }
 
+        // Check if receiptBookId is changing
+        if (item.receiptBookId && item.receiptBookId !== String(receiptToUpdate.receiptBook)) {
+          // Decrement usedReceipts count in old ReceiptBook
+          const oldReceiptBook = await ReceiptBookModel.findById(receiptToUpdate.receiptBook).session(session);
+          if (oldReceiptBook) {
+            oldReceiptBook.usedReceipts = Math.max(0, oldReceiptBook.usedReceipts - 1);
+            await oldReceiptBook.save({ session });
+          }
+
+          // Increment usedReceipts count in new ReceiptBook
+          const newReceiptBook = await ReceiptBookModel.findById(item.receiptBookId).session(session);
+          if (!newReceiptBook) {
+            throw new ApolloError('New ReceiptBook not found', 'RECEIPTBOOK_NOT_FOUND');
+          }
+          if (newReceiptBook.usedReceipts >= newReceiptBook.totalReceipts) {
+            throw new ApolloError('New ReceiptBook is full', 'RECEIPTBOOK_FULL');
+          }
+          newReceiptBook.usedReceipts += 1;
+          await newReceiptBook.save({ session });
+        }
+
+        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true, session: session });
+
+        await session.commitTransaction();
         return updatedReceipt;
       } catch (error) {
-        console.error(`Receipt.update [${id}]`, error);
+        await session.abortTransaction();
+        console.error(`Receipt.update [${args.id}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error updating Receipt'));
+      } finally {
+        session.endSession();
       }
     },
-    async deleteReceipt(parent: never, args: DeleteArgs<{ id: string }>): Promise<Receipt> {
-      const { id } = args;
+    async deleteReceipt(parent: never, args: DeleteArgs<{ id: string }>, context: GraphQLRequestContextWithAuth): Promise<Receipt> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!args.id) {
+        throw new ApolloError('An "id" is required to delete.', 'DELETE_ARGS_REQUIRED');
+      }
+
+      const session = await mongoose.startSession();
+      session.startTransaction();
 
       try {
-        const deletedReceipt = await ReceiptModel.findByIdAndDelete(id);
+        const { id } = args;
+        const deletedReceipt = await ReceiptModel.findByIdAndDelete(id, { session });
 
         if (!deletedReceipt) {
           throw new ApolloError('Receipt not found', 'NOT_FOUND');
         }
 
+        // Update the usedReceipts counter in the corresponding ReceiptBook
+        const receiptBook = await ReceiptBookModel.findById(deletedReceipt.receiptBook).session(session);
+        if (receiptBook) {
+          receiptBook.usedReceipts -= 1;
+          await receiptBook.save({ session });
+        }
+
+        await session.commitTransaction();
         return deletedReceipt;
       } catch (error) {
-        console.error(`Receipt.delete [${id}]`, error);
+        await session.abortTransaction();
+        console.error(`Receipt.delete [${args.id}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error deleting Receipt'));
+      } finally {
+        session.endSession();
       }
     },
   },
