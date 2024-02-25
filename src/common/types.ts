@@ -73,10 +73,16 @@ export interface AuthContext {
   canIntrospect: boolean;
   canMutate: boolean;
   authData?: {
-    isApiKey?: boolean;
-    isOAuthToken?: boolean;
-    apiKeyCredentials?: string;
-    oauthTokenCredentials?: OAuthClientCredentials;
+    userId?: string;
+    userRoles?: string[];
+    userDataInAccessToken?: any;
+  };
+  permissions?: {
+    read_all: boolean;
+    delete_all: boolean;
+    delete_self: boolean;
+    edit_all: boolean;
+    edit_self: boolean;
   };
 }
 

@@ -1,9 +1,10 @@
 import { ApolloError } from 'apollo-server-errors';
 import UserRoles from 'supertokens-node/recipe/userroles';
 
-import { CreateArgs, DataStoreError, QueryArgs } from '../common/types';
+import { CreateArgs, DataStoreError, ForbiddenError, QueryArgs } from '../common/types';
 import { AssignUserRole, CreateUserRole, RemoveUserRole, UserRole, WhereOptionsUserRole } from '../generated/graphql';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
+import { GraphQLRequestContextWithAuth } from './../common/types';
 
 export const resolvers = {
   Query: {
@@ -45,7 +46,13 @@ export const resolvers = {
     },
   },
   Mutation: {
-    async createUserRole(parent: never, args: CreateArgs<CreateUserRole>): Promise<boolean> {
+    async createUserRole(parent: never, args: CreateArgs<CreateUserRole>, context: GraphQLRequestContextWithAuth): Promise<boolean> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!context.auth.authData.userRoles.includes('admin')) {
+        throw new ApolloError('You must be an Admin to create a User Role ', 'UNAUTHORIZED');
+      }
       if (!args.item || Object.keys(args.item).length === 0) {
         throw new ApolloError('An "item" CreateUserRole object is required.', 'CREATE_ARGS_REQUIRED');
       }
@@ -65,7 +72,13 @@ export const resolvers = {
         throw DataStoreError(formatDataStoreError(error, 'Error creating UserRole'));
       }
     },
-    async deleteUserRole(parent: never, args: { name: string }): Promise<boolean> {
+    async deleteUserRole(parent: never, args: { name: string }, context: GraphQLRequestContextWithAuth): Promise<boolean> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!context.auth.authData.userRoles.includes('admin')) {
+        throw new ApolloError('You must be an Admin to delete a User Role ', 'UNAUTHORIZED');
+      }
       if (!args.name) {
         throw new ApolloError('A Role Name is required.', 'DELETE_ARGS_REQUIRED');
       }
@@ -84,7 +97,13 @@ export const resolvers = {
         throw DataStoreError(formatDataStoreError(error, 'Error deleting Receipt'));
       }
     },
-    async assignRoleToUser(parent: never, args: { item: AssignUserRole }): Promise<boolean> {
+    async assignRoleToUser(parent: never, args: { item: AssignUserRole }, context: GraphQLRequestContextWithAuth): Promise<boolean> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!context.auth.authData.userRoles.includes('admin')) {
+        throw new ApolloError('You must be an Admin to assign Role to an user', 'UNAUTHORIZED');
+      }
       if (!args.item || Object.keys(args.item).length === 0) {
         throw new ApolloError('An "item" AssignUserRole object is required.', 'ASSIGN_USER_ROLE_ARGS_REQUIRED');
       }
@@ -108,7 +127,13 @@ export const resolvers = {
         throw DataStoreError(formatDataStoreError(error, 'Error creating UserRole'));
       }
     },
-    async removeRoleFromUser(parent: never, args: { item: RemoveUserRole }): Promise<boolean> {
+    async removeRoleFromUser(parent: never, args: { item: RemoveUserRole }, context: GraphQLRequestContextWithAuth): Promise<boolean> {
+      if (!context.auth.canMutate) {
+        throw ForbiddenError('Unauthorized');
+      }
+      if (!context.auth.authData.userRoles.includes('admin')) {
+        throw new ApolloError('You must be an Admin to remove Role from an user', 'UNAUTHORIZED');
+      }
       if (!args.item || Object.keys(args.item).length === 0) {
         throw new ApolloError('An "item" RemoveUserRole object is required.', 'REMOVE_USER_ROLE_ARGS_REQUIRED');
       }

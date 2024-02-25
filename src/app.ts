@@ -14,6 +14,8 @@ import supertokens from 'supertokens-node';
 import { middleware } from 'supertokens-node/framework/express';
 import { errorHandler } from 'supertokens-node/framework/express';
 
+import { context } from './auth';
+import { AuthContext } from './common/types';
 import { APP_PORT, DEPLOY_ENV } from './constants';
 import { connectToMongo } from './database';
 import { gqlModules, scalars } from './graphql/all.types';
@@ -46,8 +48,8 @@ const playgroundPlugin = isProd
   ? ApolloServerPluginLandingPageProductionDefault()
   : ApolloServerPluginLandingPageLocalDefault({ footer: false });
 
-const server = new ApolloServer({
-  introspection: true, // Managed by restrictIntrospectionPlugin, x-api-key must be set
+const server = new ApolloServer<{ auth: AuthContext }>({
+  introspection: true,
   plugins: [
     ApolloServerPluginDrainHttpServer({ httpServer }),
     ApolloServerPluginUsageReportingDisabled(),
@@ -92,7 +94,7 @@ await server.start();
 
 connectToMongo();
 
-app.use('/graphql', cors<cors.CorsRequest>(), express.json(), expressMiddleware(server));
+app.use('/graphql', cors(), express.json(), expressMiddleware(server, { context: context }));
 
 app.use(errorHandler());
 
