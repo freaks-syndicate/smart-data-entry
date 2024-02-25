@@ -1,8 +1,8 @@
 import { ApolloError } from 'apollo-server-errors';
 
 import { CreateArgs, DataStoreError, DeleteArgs, QueryArgs, UpdateArgs } from '../common/types';
+import { CreateReceipt, IdCode, Receipt, Receipts, UpdateReceipt, WhereOptionsReceipt } from '../generated/graphql';
 import { ReceiptModel } from '../models/receipt';
-import { ICreateReceipt, IdCode, IDeleteReceipt, IReceipt, IReceipts, IUpdateReceipt, IWhereOptionsReceipt } from '../types/Receipt';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
 import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
 import { withPageInfo } from '../utils/graphql/withPageInfo';
@@ -11,10 +11,10 @@ import { uuidFromString } from '../utils/uuid';
 
 export const resolvers = {
   Query: {
-    async ReceiptsAll(): Promise<IReceipt[]> {
+    async ReceiptsAll(): Promise<Receipt[]> {
       return await ReceiptModel.find({});
     },
-    async Receipts(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipts> {
+    async Receipts(parent: never, args: QueryArgs<Receipt, WhereOptionsReceipt>): Promise<Receipts> {
       const query = { ...args.where };
       const parsedQuery = parseWhereArgsToMongoQuery(query);
 
@@ -23,7 +23,7 @@ export const resolvers = {
 
       return withPageInfo(args, response, countResponse);
     },
-    async Receipt(parent: never, args: QueryArgs<IReceipt, IWhereOptionsReceipt>): Promise<IReceipt> {
+    async Receipt(parent: never, args: QueryArgs<Receipt, WhereOptionsReceipt>): Promise<Receipt> {
       if (!args.where || Object.keys(args.where).length === 0) {
         throw new ApolloError('A "where" condition is required.', 'WHERE_CONDITION_REQUIRED');
       }
@@ -34,14 +34,14 @@ export const resolvers = {
     },
   },
   Mutation: {
-    async createReceipt(parent: never, args: CreateArgs<ICreateReceipt>): Promise<IReceipt> {
+    async createReceipt(parent: never, args: CreateArgs<CreateReceipt>): Promise<Receipt> {
       const govtIdNumber = args.item.aadharNumber ?? args.item.panNumber;
 
       if (!govtIdNumber) {
         throw new ApolloError('Either aadharNumber or panNumber is required', 'VALIDATION_ERROR');
       }
 
-      const idCode = args.item.aadharNumber ? IdCode.AADHAR : args.item.panNumber ? IdCode.PAN : null;
+      const idCode = args.item.aadharNumber ? IdCode.Aadhar : args.item.panNumber ? IdCode.Pan : null;
 
       const sanitizedName = sanitize(args.item.name + govtIdNumber.toString());
       const uuid = uuidFromString(ReceiptModel.name, sanitizedName);
@@ -62,7 +62,7 @@ export const resolvers = {
 
       return newReceipt;
     },
-    async updateReceipt(parent: never, args: UpdateArgs<IUpdateReceipt>): Promise<IReceipt> {
+    async updateReceipt(parent: never, args: UpdateArgs<UpdateReceipt>): Promise<Receipt> {
       const { item, id } = args;
 
       try {
@@ -78,7 +78,7 @@ export const resolvers = {
         throw DataStoreError(formatDataStoreError(error, 'Error updating Receipt'));
       }
     },
-    async deleteReceipt(parent: never, args: DeleteArgs<IDeleteReceipt>): Promise<IReceipt> {
+    async deleteReceipt(parent: never, args: DeleteArgs<{ id: string }>): Promise<Receipt> {
       const { id } = args;
 
       try {
