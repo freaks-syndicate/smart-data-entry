@@ -40,6 +40,13 @@ export type CreateReceipt = {
   receiptNumber: Scalars['Int']['input'];
 };
 
+export type CreateReceiptBook = {
+  financialYear?: InputMaybe<Scalars['String']['input']>;
+  receiptBookNumber: Scalars['Int']['input'];
+  receiptSeries: Scalars['Int']['input'];
+  totalReceipts?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type CreateUserRole = {
   name: Scalars['String']['input'];
   permissions: Array<Scalars['String']['input']>;
@@ -110,11 +117,14 @@ export type Mutation = {
   __typename?: 'Mutation';
   assignRoleToUser?: Maybe<Scalars['Boolean']['output']>;
   createReceipt?: Maybe<Receipt>;
+  createReceiptBook?: Maybe<ReceiptBook>;
   createUserRole?: Maybe<Scalars['Boolean']['output']>;
   deleteReceipt?: Maybe<Receipt>;
+  deleteReceiptBook?: Maybe<ReceiptBook>;
   deleteUserRole?: Maybe<Scalars['Boolean']['output']>;
   removeRoleFromUser?: Maybe<Scalars['Boolean']['output']>;
   updateReceipt?: Maybe<Receipt>;
+  updateReceiptBook?: Maybe<ReceiptBook>;
 };
 
 
@@ -128,12 +138,22 @@ export type MutationCreateReceiptArgs = {
 };
 
 
+export type MutationCreateReceiptBookArgs = {
+  item: CreateReceiptBook;
+};
+
+
 export type MutationCreateUserRoleArgs = {
   item: CreateUserRole;
 };
 
 
 export type MutationDeleteReceiptArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteReceiptBookArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -151,6 +171,12 @@ export type MutationRemoveRoleFromUserArgs = {
 export type MutationUpdateReceiptArgs = {
   id: Scalars['String']['input'];
   item: UpdateReceipt;
+};
+
+
+export type MutationUpdateReceiptBookArgs = {
+  id: Scalars['String']['input'];
+  item: UpdateReceiptBook;
 };
 
 export type PageInfo = {
@@ -172,6 +198,9 @@ export type PaginationInput = {
 export type Query = {
   __typename?: 'Query';
   Receipt?: Maybe<Receipt>;
+  ReceiptBook?: Maybe<ReceiptBook>;
+  ReceiptBooks?: Maybe<ReceiptBooks>;
+  ReceiptBooksAll?: Maybe<Array<Maybe<ReceiptBook>>>;
   Receipts?: Maybe<Receipts>;
   ReceiptsAll?: Maybe<Array<Maybe<Receipt>>>;
   User?: Maybe<User>;
@@ -182,6 +211,18 @@ export type Query = {
 
 export type QueryReceiptArgs = {
   where?: InputMaybe<WhereOptionsReceipt>;
+};
+
+
+export type QueryReceiptBookArgs = {
+  where?: InputMaybe<WhereOptionsReceiptBook>;
+};
+
+
+export type QueryReceiptBooksArgs = {
+  paginate?: InputMaybe<PaginationInput>;
+  sort?: InputMaybe<SortInput>;
+  where?: InputMaybe<WhereOptionsReceiptBook>;
 };
 
 
@@ -217,6 +258,22 @@ export type Receipt = {
   panNumber?: Maybe<Scalars['String']['output']>;
   receiptNumber: Scalars['Int']['output'];
   uuid: Scalars['String']['output'];
+};
+
+export type ReceiptBook = {
+  __typename?: 'ReceiptBook';
+  financialYear?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  receiptBookNumber: Scalars['Int']['output'];
+  receiptSeries: Scalars['Int']['output'];
+  totalReceipts?: Maybe<Scalars['Int']['output']>;
+  uuid: Scalars['String']['output'];
+};
+
+export type ReceiptBooks = {
+  __typename?: 'ReceiptBooks';
+  pageInfo?: Maybe<PageInfo>;
+  results?: Maybe<Array<Maybe<ReceiptBook>>>;
 };
 
 export type Receipts = {
@@ -268,6 +325,13 @@ export type UpdateReceipt = {
   receiptNumber?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type UpdateReceiptBook = {
+  financialYear?: InputMaybe<Scalars['String']['input']>;
+  receiptBookNumber?: InputMaybe<Scalars['Int']['input']>;
+  receiptSeries?: InputMaybe<Scalars['Int']['input']>;
+  totalReceipts?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type UpdateUserRole = {
   name?: InputMaybe<Scalars['String']['input']>;
   permissions?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -293,6 +357,13 @@ export type UserRoles = {
   results?: Maybe<Array<Maybe<UserRole>>>;
 };
 
+export type UuidFilterConstraints = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  ne?: InputMaybe<Scalars['String']['input']>;
+  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type WhereOptionsReceipt = {
   address?: InputMaybe<StringFilterConstraint>;
   amount?: InputMaybe<IntFilterConstraint>;
@@ -303,7 +374,27 @@ export type WhereOptionsReceipt = {
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
   or?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptFields>>>;
   receiptNumber?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<StringFilterConstraint>;
+  uuid?: InputMaybe<UuidFilterConstraints>;
+};
+
+export type WhereOptionsReceiptBook = {
+  and?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptBookFields>>>;
+  financialYear?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<StringFilterConstraint>;
+  or?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptBookFields>>>;
+  receiptBookNumber?: InputMaybe<IntFilterConstraint>;
+  receiptSeries?: InputMaybe<IntFilterConstraint>;
+  totalReceipts?: InputMaybe<IntFilterConstraint>;
+  uuid?: InputMaybe<UuidFilterConstraints>;
+};
+
+export type WhereOptionsReceiptBookFields = {
+  financialYear?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<StringFilterConstraint>;
+  receiptBookNumber?: InputMaybe<IntFilterConstraint>;
+  receiptSeries?: InputMaybe<IntFilterConstraint>;
+  totalReceipts?: InputMaybe<IntFilterConstraint>;
+  uuid?: InputMaybe<UuidFilterConstraints>;
 };
 
 export type WhereOptionsReceiptFields = {
@@ -313,7 +404,7 @@ export type WhereOptionsReceiptFields = {
   id?: InputMaybe<StringFilterConstraint>;
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
   receiptNumber?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<StringFilterConstraint>;
+  uuid?: InputMaybe<UuidFilterConstraints>;
 };
 
 export type WhereOptionsUser = {
@@ -399,6 +490,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   BooleanFilterConstraint: BooleanFilterConstraint;
   CreateReceipt: CreateReceipt;
+  CreateReceiptBook: CreateReceiptBook;
   CreateUserRole: CreateUserRole;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   DateFilterConstraint: DateFilterConstraint;
@@ -417,6 +509,8 @@ export type ResolversTypes = {
   PaginationInput: PaginationInput;
   Query: ResolverTypeWrapper<{}>;
   Receipt: ResolverTypeWrapper<Receipt>;
+  ReceiptBook: ResolverTypeWrapper<ReceiptBook>;
+  ReceiptBooks: ResolverTypeWrapper<ReceiptBooks>;
   Receipts: ResolverTypeWrapper<Receipts>;
   RemoveUserRole: RemoveUserRole;
   SortColumn: SortColumn;
@@ -425,11 +519,15 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   StringFilterConstraint: StringFilterConstraint;
   UpdateReceipt: UpdateReceipt;
+  UpdateReceiptBook: UpdateReceiptBook;
   UpdateUserRole: UpdateUserRole;
   User: ResolverTypeWrapper<User>;
   UserRole: ResolverTypeWrapper<UserRole>;
   UserRoles: ResolverTypeWrapper<UserRoles>;
+  UuidFilterConstraints: UuidFilterConstraints;
   WhereOptionsReceipt: WhereOptionsReceipt;
+  WhereOptionsReceiptBook: WhereOptionsReceiptBook;
+  WhereOptionsReceiptBookFields: WhereOptionsReceiptBookFields;
   WhereOptionsReceiptFields: WhereOptionsReceiptFields;
   WhereOptionsUser: WhereOptionsUser;
   WhereOptionsUserRole: WhereOptionsUserRole;
@@ -441,6 +539,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   BooleanFilterConstraint: BooleanFilterConstraint;
   CreateReceipt: CreateReceipt;
+  CreateReceiptBook: CreateReceiptBook;
   CreateUserRole: CreateUserRole;
   Date: Scalars['Date']['output'];
   DateFilterConstraint: DateFilterConstraint;
@@ -456,6 +555,8 @@ export type ResolversParentTypes = {
   PaginationInput: PaginationInput;
   Query: {};
   Receipt: Receipt;
+  ReceiptBook: ReceiptBook;
+  ReceiptBooks: ReceiptBooks;
   Receipts: Receipts;
   RemoveUserRole: RemoveUserRole;
   SortColumn: SortColumn;
@@ -463,11 +564,15 @@ export type ResolversParentTypes = {
   String: Scalars['String']['output'];
   StringFilterConstraint: StringFilterConstraint;
   UpdateReceipt: UpdateReceipt;
+  UpdateReceiptBook: UpdateReceiptBook;
   UpdateUserRole: UpdateUserRole;
   User: User;
   UserRole: UserRole;
   UserRoles: UserRoles;
+  UuidFilterConstraints: UuidFilterConstraints;
   WhereOptionsReceipt: WhereOptionsReceipt;
+  WhereOptionsReceiptBook: WhereOptionsReceiptBook;
+  WhereOptionsReceiptBookFields: WhereOptionsReceiptBookFields;
   WhereOptionsReceiptFields: WhereOptionsReceiptFields;
   WhereOptionsUser: WhereOptionsUser;
   WhereOptionsUserRole: WhereOptionsUserRole;
@@ -484,11 +589,14 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   assignRoleToUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationAssignRoleToUserArgs>>;
   createReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationCreateReceiptArgs, 'item'>>;
+  createReceiptBook?: Resolver<Maybe<ResolversTypes['ReceiptBook']>, ParentType, ContextType, RequireFields<MutationCreateReceiptBookArgs, 'item'>>;
   createUserRole?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCreateUserRoleArgs, 'item'>>;
   deleteReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationDeleteReceiptArgs, 'id'>>;
+  deleteReceiptBook?: Resolver<Maybe<ResolversTypes['ReceiptBook']>, ParentType, ContextType, RequireFields<MutationDeleteReceiptBookArgs, 'id'>>;
   deleteUserRole?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserRoleArgs, 'name'>>;
   removeRoleFromUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationRemoveRoleFromUserArgs>>;
   updateReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationUpdateReceiptArgs, 'id' | 'item'>>;
+  updateReceiptBook?: Resolver<Maybe<ResolversTypes['ReceiptBook']>, ParentType, ContextType, RequireFields<MutationUpdateReceiptBookArgs, 'id' | 'item'>>;
 };
 
 export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
@@ -504,6 +612,9 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   Receipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, Partial<QueryReceiptArgs>>;
+  ReceiptBook?: Resolver<Maybe<ResolversTypes['ReceiptBook']>, ParentType, ContextType, Partial<QueryReceiptBookArgs>>;
+  ReceiptBooks?: Resolver<Maybe<ResolversTypes['ReceiptBooks']>, ParentType, ContextType, Partial<QueryReceiptBooksArgs>>;
+  ReceiptBooksAll?: Resolver<Maybe<Array<Maybe<ResolversTypes['ReceiptBook']>>>, ParentType, ContextType>;
   Receipts?: Resolver<Maybe<ResolversTypes['Receipts']>, ParentType, ContextType, Partial<QueryReceiptsArgs>>;
   ReceiptsAll?: Resolver<Maybe<Array<Maybe<ResolversTypes['Receipt']>>>, ParentType, ContextType>;
   User?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, Partial<QueryUserArgs>>;
@@ -525,6 +636,22 @@ export type ReceiptResolvers<ContextType = any, ParentType extends ResolversPare
   panNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   receiptNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReceiptBookResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReceiptBook'] = ResolversParentTypes['ReceiptBook']> = {
+  financialYear?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  receiptBookNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  receiptSeries?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalReceipts?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReceiptBooksResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReceiptBooks'] = ResolversParentTypes['ReceiptBooks']> = {
+  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
+  results?: Resolver<Maybe<Array<Maybe<ResolversTypes['ReceiptBook']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -561,6 +688,8 @@ export type Resolvers<ContextType = any> = {
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Receipt?: ReceiptResolvers<ContextType>;
+  ReceiptBook?: ReceiptBookResolvers<ContextType>;
+  ReceiptBooks?: ReceiptBooksResolvers<ContextType>;
   Receipts?: ReceiptsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserRole?: UserRoleResolvers<ContextType>;

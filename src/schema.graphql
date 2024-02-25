@@ -41,6 +41,13 @@ input Id {
   uuid: String
 }
 
+input UuidFilterConstraints {
+  ne: String
+  eq: String
+  in: [String]
+  notIn: [String]
+}
+
 input StringFilterConstraint {
   ne: String
   eq: String
@@ -158,6 +165,68 @@ type Mutation {
   removeRoleFromUser(item: RemoveUserRole): Boolean
 }
 
+# ======= Receipt Book =======
+type ReceiptBook {
+  id: ID!
+  uuid: String!
+  receiptBookNumber: Int!
+  receiptSeries: Int!
+  totalReceipts: Int
+  financialYear: String
+}
+
+type ReceiptBooks {
+  results: [ReceiptBook]
+  pageInfo: PageInfo
+}
+
+input WhereOptionsReceiptBookFields {
+  id: StringFilterConstraint
+  uuid: UuidFilterConstraints
+  receiptBookNumber: IntFilterConstraint
+  receiptSeries: IntFilterConstraint
+  totalReceipts: IntFilterConstraint
+  financialYear: String
+}
+
+input WhereOptionsReceiptBook {
+  and: [WhereOptionsReceiptBookFields]
+  or: [WhereOptionsReceiptBookFields]
+
+  id: StringFilterConstraint
+  uuid: UuidFilterConstraints
+  receiptBookNumber: IntFilterConstraint
+  receiptSeries: IntFilterConstraint
+  totalReceipts: IntFilterConstraint
+  financialYear: String
+}
+
+type Query {
+  ReceiptBooksAll: [ReceiptBook]
+  ReceiptBooks(where: WhereOptionsReceiptBook, paginate: PaginationInput, sort: SortInput): ReceiptBooks
+  ReceiptBook(where: WhereOptionsReceiptBook): ReceiptBook
+}
+
+input CreateReceiptBook {
+  receiptBookNumber: Int!
+  receiptSeries: Int!
+  totalReceipts: Int
+  financialYear: String
+}
+
+input UpdateReceiptBook {
+  receiptBookNumber: Int
+  receiptSeries: Int
+  totalReceipts: Int
+  financialYear: String
+}
+
+type Mutation {
+  createReceiptBook(item: CreateReceiptBook!): ReceiptBook
+  updateReceiptBook(id: String!, item: UpdateReceiptBook!): ReceiptBook
+  deleteReceiptBook(id: String!): ReceiptBook
+}
+
 # ======= Receipt =======
 enum IdCode {
   Aadhar
@@ -194,7 +263,7 @@ type Receipts {
 
 input WhereOptionsReceiptFields {
   id: StringFilterConstraint
-  uuid: StringFilterConstraint
+  uuid: UuidFilterConstraints
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
@@ -207,7 +276,7 @@ input WhereOptionsReceipt {
   or: [WhereOptionsReceiptFields]
 
   id: StringFilterConstraint
-  uuid: StringFilterConstraint
+  uuid: UuidFilterConstraints
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
