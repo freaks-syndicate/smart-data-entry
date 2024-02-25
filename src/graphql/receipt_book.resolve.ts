@@ -1,7 +1,9 @@
 import { ApolloError } from 'apollo-server-errors';
 
+import { isAdmin } from '../auth';
 import { CreateArgs, DataStoreError, DeleteArgs, ForbiddenError, QueryArgs, UpdateArgs } from '../common/types';
 import { ReceiptBook, WhereOptionsReceiptBook } from '../generated/graphql';
+import { ReceiptModel } from '../models/receipt';
 import { ReceiptBookModel } from '../models/receipt_book';
 import { formatDataStoreError } from '../utils/formatDataStoreError';
 import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
@@ -12,6 +14,12 @@ import { GraphQLRequestContextWithAuth } from './../../dist/src/common/types.d';
 import { CreateReceiptBook, ReceiptBooks, UpdateReceiptBook } from './../generated/graphql';
 
 export const resolvers = {
+  ReceiptBook: {
+    // Field resolver for fetching receipts related to a receipt book
+    receipts: async (receiptBook) =>
+      // Fetch and return receipts that are associated with this receipt book
+      ReceiptModel.find({ receiptBookId: receiptBook.id }),
+  },
   Query: {
     async ReceiptBooksAll(): Promise<ReceiptBook[]> {
       return await ReceiptBookModel.find({});
@@ -44,7 +52,7 @@ export const resolvers = {
       if (!context.auth.canMutate) {
         throw ForbiddenError('Unauthorized');
       }
-      if (!context.auth.authData.userRoles.includes('admin')) {
+      if (context.auth.isAnonymous && !isAdmin(context)) {
         throw new ApolloError('You must be an Admin to create a Receipt Book ', 'UNAUTHORIZED');
       }
       if (!args.item || Object.keys(args.item).length === 0) {
@@ -77,7 +85,7 @@ export const resolvers = {
       if (!context.auth.canMutate) {
         throw ForbiddenError('Unauthorized');
       }
-      if (!context.auth.authData.userRoles.includes('admin')) {
+      if (context.auth.isAnonymous && !isAdmin(context)) {
         throw new ApolloError('You must be an Admin to update a Receipt Book ', 'UNAUTHORIZED');
       }
       if (!args.item || Object.keys(args.item).length === 0) {
@@ -103,7 +111,7 @@ export const resolvers = {
       if (!context.auth.canMutate) {
         throw ForbiddenError('Unauthorized');
       }
-      if (!context.auth.authData.userRoles.includes('admin')) {
+      if (context.auth.isAnonymous && !isAdmin(context)) {
         throw new ApolloError('You must be an Admin to update a Receipt Book ', 'UNAUTHORIZED');
       }
       if (!args.id) {
