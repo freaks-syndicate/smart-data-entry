@@ -65,6 +65,56 @@ export const backendConfig = (): TypeInput => ({
           },
         },
       ],
+      override: {
+        functions: (originalImplementation) => ({
+          ...originalImplementation,
+
+          emailPasswordSignUp: async function (input) {
+            // TODO: some pre sign up logic
+            const response = await originalImplementation.emailPasswordSignUp(input);
+
+            if (response.status === 'OK' && response.user.loginMethods.length === 1) {
+              // TODO: some post sign up logic
+            }
+
+            return response;
+          },
+
+          emailPasswordSignIn: async function (input) {
+            // TODO: some pre sign in logic
+            const response = await originalImplementation.emailPasswordSignIn(input);
+
+            if (response.status === 'OK') {
+              // TODO: some post sign in logic
+            }
+
+            return response;
+          },
+
+          thirdPartySignInUp: async function (input) {
+            // TODO: Some pre sign in / up logic
+
+            const response = await originalImplementation.thirdPartySignInUp(input);
+
+            if (response.status === 'OK') {
+              // const accessToken = response.oAuthTokens['access_token'];
+
+              const firstName = response.rawUserInfoFromProvider.fromUserInfoAPI!['first_name'];
+              const lastName = response.rawUserInfoFromProvider.fromUserInfoAPI!['last_name'];
+              const userId = response.user.id;
+
+              if (response.createdNewRecipeUser && response.user.loginMethods.length === 1) {
+                // TODO: some post sign up logic
+                await UserMetadata.updateUserMetadata(userId, { first_name: firstName, last_name: lastName });
+              } else {
+                // TODO: some post sign in logic
+              }
+            }
+
+            return response;
+          },
+        }),
+      },
     }),
     Dashboard.init(),
     Session.init(),
