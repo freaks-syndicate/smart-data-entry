@@ -49,6 +49,11 @@ const ReceiptSchema = new Schema<Receipt>({
     enum: IdCode,
     required: true,
   },
+  receiptBook: {
+    type: Schema.Types.ObjectId,
+    ref: 'ReceiptBook',
+    required: true,
+  },
 });
 
 export const ReceiptModel = model('Receipt', ReceiptSchema);
