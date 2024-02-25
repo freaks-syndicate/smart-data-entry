@@ -22,6 +22,11 @@ const ReceiptBookSchema = new Schema<ReceiptBook>({
     required: false,
     match: [financialYearPattern, 'Please enter a valid financial year (2023-2024)'],
   },
+  usedReceipts: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
 });
 
 export const ReceiptBookModel = model('ReceiptBook', ReceiptBookSchema);
