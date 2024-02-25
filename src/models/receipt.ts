@@ -1,12 +1,12 @@
 import { model, Schema } from 'mongoose';
 
-import { IdCode, IReceipt, ModeOfPayment } from '../types/Receipt';
+import { IdCode, ModeOfPayment, Receipt } from '../generated/graphql';
 
 const indianMobileNumberPattern = /^[6-9]\d{9}$/;
 const panNumberPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
 const financialYearPattern = /^[0-9]{4}-[0-9]{4}$/;
 
-const ReceiptSchema = new Schema<IReceipt>({
+const ReceiptSchema = new Schema<Receipt>({
   uuid: { type: String, required: true, unique: true },
   receiptNumber: { type: Number, required: true, unique: true },
   financialYear: {
@@ -27,7 +27,7 @@ const ReceiptSchema = new Schema<IReceipt>({
     required: [true, 'Amount is required'],
     min: [1, 'Amount should be at least 1'],
   },
-  modeOfPayment: { type: String, required: true, default: ModeOfPayment.CASH, enum: ModeOfPayment },
+  modeOfPayment: { type: String, required: true, default: ModeOfPayment.Cash, enum: ModeOfPayment },
   aadharNumber: {
     type: String,
     required: false,
