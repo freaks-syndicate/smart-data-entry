@@ -108,12 +108,12 @@ export enum ModeOfPayment {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  assignRoleToUser?: Maybe<UserRole>;
+  assignRoleToUser?: Maybe<Scalars['Boolean']['output']>;
   createReceipt?: Maybe<Receipt>;
   createUserRole?: Maybe<Scalars['Boolean']['output']>;
   deleteReceipt?: Maybe<Receipt>;
   deleteUserRole?: Maybe<Scalars['Boolean']['output']>;
-  removeRoleFromUser?: Maybe<UserRole>;
+  removeRoleFromUser?: Maybe<Scalars['Boolean']['output']>;
   updateReceipt?: Maybe<Receipt>;
 };
 
@@ -460,12 +460,12 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  assignRoleToUser?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType, Partial<MutationAssignRoleToUserArgs>>;
+  assignRoleToUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationAssignRoleToUserArgs>>;
   createReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationCreateReceiptArgs, 'item'>>;
   createUserRole?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationCreateUserRoleArgs, 'item'>>;
   deleteReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationDeleteReceiptArgs, 'id'>>;
   deleteUserRole?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserRoleArgs, 'name'>>;
-  removeRoleFromUser?: Resolver<Maybe<ResolversTypes['UserRole']>, ParentType, ContextType, Partial<MutationRemoveRoleFromUserArgs>>;
+  removeRoleFromUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, Partial<MutationRemoveRoleFromUserArgs>>;
   updateReceipt?: Resolver<Maybe<ResolversTypes['Receipt']>, ParentType, ContextType, RequireFields<MutationUpdateReceiptArgs, 'id' | 'item'>>;
 };
 

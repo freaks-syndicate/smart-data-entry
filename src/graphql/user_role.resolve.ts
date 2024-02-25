@@ -9,8 +9,24 @@ export const resolvers = {
   Query: {
     async UserRolesAll(): Promise<UserRole[]> {
       const data = await UserRoles.getAllRoles();
-      const roles = data.roles.map((role) => ({ name: role, permissions: [] }));
-      return roles;
+      const rolesWithPermissionsPromises = data.roles.map(async (role) => {
+        try {
+          const response = await UserRoles.getPermissionsForRole(role);
+          if (response.status === 'OK') {
+            return { name: role, permissions: response.permissions };
+          } else {
+            console.error(`Failed to get permissions for role ${role}`);
+            return null;
+          }
+        } catch (error) {
+          console.error(`Error fetching permissions for role ${role}:`, error);
+          return null;
+        }
+      });
+
+      const rolesWithPermissions = (await Promise.all(rolesWithPermissionsPromises)).filter(Boolean);
+
+      return rolesWithPermissions;
     },
     async UserRole(parent: never, args: QueryArgs<UserRole, WhereOptionsUserRole>): Promise<UserRole> {
       if (!args.where || Object.keys(args.where).length === 0) {
