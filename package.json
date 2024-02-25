@@ -13,6 +13,7 @@
     "build:watch": "node_modules/.bin/webpack --watch",
     "start": "node ./dist/app.js",
     "run:watch": "node_modules/.bin/nodemon ./dist/app.js",
+    "generate": "graphql-codegen --config codegen.yml",
     "prepare": "husky",
     "k6:load": "k6 run --vus ${K6_VUS:-20} --duration ${K6_DURATION:-10m} ./test/performance/script.k6.js"
   },
@@ -51,6 +52,10 @@
     "@commitlint/cli": "^18.6.0",
     "@commitlint/config-conventional": "^18.6.0",
     "@commitlint/types": "^18.6.0",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.6",
+    "@graphql-codegen/typescript-operations": "^4.2.0",
+    "@graphql-codegen/typescript-resolvers": "^4.0.6",
     "@jest/globals": "^29.3.1",
     "@types/babel__core": "^7",
     "@types/babel__preset-env": "^7",

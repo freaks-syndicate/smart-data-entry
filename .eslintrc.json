@@ -22,5 +22,6 @@
       }
     ],
     "@typescript-eslint/no-empty-interface": "off"
-  }
+  },
+  "ignorePatterns": ["src/generated"]
 }
