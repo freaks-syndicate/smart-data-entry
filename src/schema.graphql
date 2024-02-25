@@ -173,6 +173,9 @@ type ReceiptBook {
   receiptSeries: Int!
   totalReceipts: Int
   financialYear: String
+
+  receipts: [Receipt]
+  usedReceipts: Int!
 }
 
 type ReceiptBooks {
@@ -254,6 +257,8 @@ type Receipt {
   aadharNumber: String
   panNumber: String
   idCode: IdCode
+
+  receiptBook: ReceiptBook!
 }
 
 type Receipts {
@@ -298,10 +303,12 @@ input CreateReceipt {
   mobileNumber: String
   name: String!
   address: String
-  modeOfPayment: String!
+  modeOfPayment: ModeOfPayment!
   amount: Int!
   aadharNumber: String
   panNumber: String
+
+  receiptBookId: String!
 }
 
 input UpdateReceipt {
@@ -315,6 +322,8 @@ input UpdateReceipt {
   modeOfPayment: String
   aadharNumber: String
   panNumber: String
+
+  receiptBookId: String
 }
 
 type Mutation {

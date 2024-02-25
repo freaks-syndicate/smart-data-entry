@@ -34,9 +34,10 @@ export type CreateReceipt = {
   date?: InputMaybe<Scalars['Date']['input']>;
   financialYear?: InputMaybe<Scalars['String']['input']>;
   mobileNumber?: InputMaybe<Scalars['String']['input']>;
-  modeOfPayment: Scalars['String']['input'];
+  modeOfPayment: ModeOfPayment;
   name: Scalars['String']['input'];
   panNumber?: InputMaybe<Scalars['String']['input']>;
+  receiptBookId: Scalars['String']['input'];
   receiptNumber: Scalars['Int']['input'];
 };
 
@@ -256,6 +257,7 @@ export type Receipt = {
   modeOfPayment: ModeOfPayment;
   name?: Maybe<Scalars['String']['output']>;
   panNumber?: Maybe<Scalars['String']['output']>;
+  receiptBook: ReceiptBook;
   receiptNumber: Scalars['Int']['output'];
   uuid: Scalars['String']['output'];
 };
@@ -266,7 +268,9 @@ export type ReceiptBook = {
   id: Scalars['ID']['output'];
   receiptBookNumber: Scalars['Int']['output'];
   receiptSeries: Scalars['Int']['output'];
+  receipts?: Maybe<Array<Maybe<Receipt>>>;
   totalReceipts?: Maybe<Scalars['Int']['output']>;
+  usedReceipts: Scalars['Int']['output'];
   uuid: Scalars['String']['output'];
 };
 
@@ -322,6 +326,7 @@ export type UpdateReceipt = {
   modeOfPayment?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   panNumber?: InputMaybe<Scalars['String']['input']>;
+  receiptBookId?: InputMaybe<Scalars['String']['input']>;
   receiptNumber?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -634,6 +639,7 @@ export type ReceiptResolvers<ContextType = any, ParentType extends ResolversPare
   modeOfPayment?: Resolver<ResolversTypes['ModeOfPayment'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   panNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  receiptBook?: Resolver<ResolversTypes['ReceiptBook'], ParentType, ContextType>;
   receiptNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -644,7 +650,9 @@ export type ReceiptBookResolvers<ContextType = any, ParentType extends Resolvers
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   receiptBookNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   receiptSeries?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  receipts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Receipt']>>>, ParentType, ContextType>;
   totalReceipts?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  usedReceipts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
