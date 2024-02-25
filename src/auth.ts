@@ -4,7 +4,7 @@ import Session from 'supertokens-node/recipe/session';
 import UserRoles from 'supertokens-node/recipe/userroles';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AuthContext } from './common/types';
+import { AuthContext, GraphQLRequestContextWithAuth } from './common/types';
 import { logger } from './logger';
 
 export const context = async ({ req, res }: { req: SessionRequest; res: Response }) => {
@@ -62,3 +62,6 @@ export const context = async ({ req, res }: { req: SessionRequest; res: Response
     logger: requestLogger,
   };
 };
+
+// Helper function to check if the user has the admin role
+export const isAdmin = (context: GraphQLRequestContextWithAuth) => context.auth.authData.userRoles.includes('admin');
