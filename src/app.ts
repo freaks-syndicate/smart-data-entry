@@ -94,7 +94,16 @@ await server.start();
 
 connectToMongo();
 
-app.use('/graphql', cors(), express.json(), expressMiddleware(server, { context: context }));
+app.use(
+  '/graphql',
+  cors({
+    origin: ['https://smart-data-entry-ui.vercel.app', 'http://localhost:3000'],
+    allowedHeaders: ['content-type', ...supertokens.getAllCORSHeaders()],
+    credentials: true,
+  }),
+  express.json(),
+  expressMiddleware(server, { context: context }),
+);
 
 app.use(errorHandler());
 
