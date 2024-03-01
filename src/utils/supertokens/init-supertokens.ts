@@ -9,6 +9,7 @@ import UserRoles from 'supertokens-node/recipe/userroles';
 import { SUPERTOKENS_API_DOMAIN, SUPERTOKENS_API_KEY, SUPERTOKENS_APP_DOMAIN, SUPERTOKENS_CONNECTION_URI } from '../../constants';
 
 export const backendConfig = (): TypeInput => ({
+  debug: false,
   framework: 'express',
   supertokens: {
     connectionURI: SUPERTOKENS_CONNECTION_URI,
