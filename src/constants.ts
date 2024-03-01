@@ -15,7 +15,6 @@ export const MONGO_URI = process.env.MONGO_URI;
 
 export const DEPLOY_ENV = process.env.DEPLOY_ENV || 'prod';
 export const IS_LOCAL = DEPLOY_ENV === 'local';
-export const INTROSPECTION_TOKEN = process.env.INTROSPECTION_TOKEN ?? '';
 
 export const MAX_HTTP_BACKLOG = process.env.MAX_HTTP_BACKLOG ? parseInt(process.env.MAX_HTTP_BACKLOG) : 1023;
 export const APP_KEEPALIVE_TIMEOUT = process.env.APP_KEEPALIVE_TIMEOUT ? parseInt(process.env.APP_KEEPALIVE_TIMEOUT) : 90000;
