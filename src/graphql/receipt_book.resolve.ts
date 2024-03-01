@@ -1,7 +1,15 @@
 import { ApolloError } from 'apollo-server-errors';
 
 import { isAdmin } from '../auth';
-import { CreateArgs, DataStoreError, DeleteArgs, ForbiddenError, QueryArgs, UpdateArgs } from '../common/types';
+import {
+  CreateArgs,
+  DataStoreError,
+  DeleteArgs,
+  ForbiddenError,
+  GraphQLRequestContextWithAuth,
+  QueryArgs,
+  UpdateArgs,
+} from '../common/types';
 import { ReceiptBook, WhereOptionsReceiptBook } from '../generated/graphql';
 import { ReceiptModel } from '../models/receipt';
 import { ReceiptBookModel } from '../models/receipt_book';
@@ -10,7 +18,6 @@ import { parseWhereArgsToMongoQuery } from '../utils/graphql/parseMongoQuery';
 import { withPageInfo } from '../utils/graphql/withPageInfo';
 import { sanitize } from '../utils/stringUtils';
 import { uuidFromString } from '../utils/uuid';
-import { GraphQLRequestContextWithAuth } from './../../dist/src/common/types.d';
 import { CreateReceiptBook, ReceiptBooks, UpdateReceiptBook } from './../generated/graphql';
 
 export const resolvers = {
