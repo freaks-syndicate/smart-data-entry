@@ -28,14 +28,17 @@ export const context = async ({ req, res }: { req: SessionRequest; res: Response
       sessionRequired: false,
     });
     if (session) {
+      auth.isAnonymous = false;
+      auth.canMutate = true;
+
       auth.authData.userId = session.getUserId();
       auth.authData.userDataInAccessToken = session.getAccessTokenPayload();
 
-      const roles = await req.session.getClaimValue(UserRoles.UserRoleClaim);
+      const roles = await session.getClaimValue(UserRoles.UserRoleClaim);
       auth.authData.userRoles = roles;
 
       // Fetch permissions and set the permissions in context
-      const permissions = await req.session.getClaimValue(UserRoles.PermissionClaim);
+      const permissions = await session.getClaimValue(UserRoles.PermissionClaim);
 
       if (permissions.includes('delete:all')) {
         auth.permissions.delete_all = true;
