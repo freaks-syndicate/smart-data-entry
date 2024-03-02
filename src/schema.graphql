@@ -41,11 +41,11 @@ input Id {
   uuid: String
 }
 
-input UuidFilterConstraints {
+input IdFilterConstraints {
   ne: String
   eq: String
   in: [String]
-  notIn: [String]
+  nin: [String]
 }
 
 input StringFilterConstraint {
@@ -56,21 +56,18 @@ input StringFilterConstraint {
   is: String
   not: String
   in: [String]
-  notIn: [String]
+  nin: [String]
 }
 
 input IntFilterConstraint {
   in: [Int]
-  notIn: [Int]
+  nin: [Int]
   ne: Int
   eq: Int
   lte: Int
   lt: Int
   gte: Int
   gt: Int
-  between: [Int]
-  notBetween: [Int]
-  is: Int
 }
 
 input FloatFilterConstraint {
@@ -82,9 +79,6 @@ input FloatFilterConstraint {
   lt: Int
   gte: Int
   gt: Float
-  between: [Float]
-  notBetween: [Float]
-  is: Float
 }
 
 input DateFilterConstraint {
@@ -92,10 +86,6 @@ input DateFilterConstraint {
   lt: Date
   gte: Date
   gt: Date
-  between: [Date]
-  notBetween: [Date]
-  isNull: Date
-  isNotNull: Date
 }
 
 input BooleanFilterConstraint {
@@ -184,8 +174,8 @@ type ReceiptBooks {
 }
 
 input WhereOptionsReceiptBookFields {
-  id: StringFilterConstraint
-  uuid: UuidFilterConstraints
+  id: String
+  uuid: IdFilterConstraints
   receiptBookNumber: IntFilterConstraint
   receiptSeries: IntFilterConstraint
   totalReceipts: IntFilterConstraint
@@ -196,8 +186,8 @@ input WhereOptionsReceiptBook {
   and: [WhereOptionsReceiptBookFields]
   or: [WhereOptionsReceiptBookFields]
 
-  id: StringFilterConstraint
-  uuid: UuidFilterConstraints
+  id: String
+  uuid: IdFilterConstraints
   receiptBookNumber: IntFilterConstraint
   receiptSeries: IntFilterConstraint
   totalReceipts: IntFilterConstraint
@@ -267,8 +257,8 @@ type Receipts {
 }
 
 input WhereOptionsReceiptFields {
-  id: StringFilterConstraint
-  uuid: UuidFilterConstraints
+  id: String
+  uuid: IdFilterConstraints
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
@@ -280,8 +270,8 @@ input WhereOptionsReceipt {
   and: [WhereOptionsReceiptFields]
   or: [WhereOptionsReceiptFields]
 
-  id: StringFilterConstraint
-  uuid: UuidFilterConstraints
+  id: String
+  uuid: IdFilterConstraints
   address: StringFilterConstraint
   receiptNumber: IntFilterConstraint
   amount: IntFilterConstraint
