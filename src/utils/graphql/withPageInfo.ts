@@ -24,8 +24,10 @@ export const withPageInfo = <K, V>(
       itemCount = count;
     }
   }
+  const startItemNumber = page === 0 ? 0 : page * pageSize;
+  const endItemNumber = startItemNumber + pageSize;
   const finalResponse: PaginatedResponse<K> = {
-    results: response.slice(page, pageSize),
+    results: response.slice(startItemNumber, endItemNumber),
     pageInfo: {
       currentPage: page,
       perPage: pageSize,
