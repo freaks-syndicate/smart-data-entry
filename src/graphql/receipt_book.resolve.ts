@@ -23,9 +23,10 @@ import { CreateReceiptBook, ReceiptBooks, UpdateReceiptBook } from './../generat
 export const resolvers = {
   ReceiptBook: {
     // Field resolver for fetching receipts related to a receipt book
-    receipts: async (receiptBook) =>
-      // Fetch and return receipts that are associated with this receipt book
-      ReceiptModel.find({ receiptBookId: receiptBook.id }),
+    receipts: async (receiptBook) => {
+      const receipts = await ReceiptModel.find({ receiptBook: receiptBook.id }).exec();
+      return receipts;
+    },
   },
   Query: {
     async ReceiptBooksAll(): Promise<ReceiptBook[]> {
