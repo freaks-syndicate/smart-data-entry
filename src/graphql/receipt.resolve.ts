@@ -99,7 +99,7 @@ export const resolvers = {
         await receiptBook.save({ session });
 
         await session.commitTransaction();
-        return newReceipt;
+        return newReceipt.populate('receiptBook');
       } catch (error) {
         await session.abortTransaction();
         console.error(`Receipt.create uuid=[${uuid}]`, error);
@@ -148,7 +148,7 @@ export const resolvers = {
           await newReceiptBook.save({ session });
         }
 
-        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true, session: session });
+        const updatedReceipt = await ReceiptModel.findByIdAndUpdate(id, item, { new: true, session: session }).populate('receiptBook');
 
         await session.commitTransaction();
         return updatedReceipt;
@@ -187,7 +187,7 @@ export const resolvers = {
         }
 
         await session.commitTransaction();
-        return deletedReceipt;
+        return deletedReceipt.populate('receiptBook');
       } catch (error) {
         await session.abortTransaction();
         console.error(`Receipt.delete [${args.id}]`, error);
