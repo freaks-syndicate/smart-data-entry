@@ -115,7 +115,7 @@ export const resolvers = {
         throw DataStoreError(formatDataStoreError(error, 'Error updating ReceiptBook'));
       }
     },
-    async deleteReceipt(parent: never, args: DeleteArgs<{ id: string }>, context: GraphQLRequestContextWithAuth): Promise<ReceiptBook> {
+    async deleteReceiptBook(parent: never, args: DeleteArgs<{ id: string }>, context: GraphQLRequestContextWithAuth): Promise<ReceiptBook> {
       if (!context.auth.canMutate) {
         throw ForbiddenError('Unauthorized');
       }
@@ -129,13 +129,13 @@ export const resolvers = {
       const { id } = args;
 
       try {
-        const deletedReceipt = await ReceiptBookModel.findByIdAndDelete(id);
+        const deletedReceiptBook = await ReceiptBookModel.findByIdAndDelete(id);
 
-        if (!deletedReceipt) {
+        if (!deletedReceiptBook) {
           throw new ApolloError('ReceiptBook not found', 'NOT_FOUND');
         }
 
-        return deletedReceipt;
+        return deletedReceiptBook;
       } catch (error) {
         console.error(`ReceiptBook.delete [${id}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error deleting ReceiptBook'));
