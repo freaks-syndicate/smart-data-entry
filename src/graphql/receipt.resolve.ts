@@ -19,16 +19,17 @@ import { withPageInfo } from '../utils/graphql/withPageInfo';
 import { sanitize } from '../utils/stringUtils';
 import { uuidFromString } from '../utils/uuid';
 
+// FIXME: Sorting is not yet possible, need to implement for mongoose based resolver
 export const resolvers = {
   Query: {
     async ReceiptsAll(): Promise<Receipt[]> {
-      return await ReceiptModel.find({});
+      return await ReceiptModel.find({}).populate('receiptBook');
     },
     async Receipts(parent: never, args: QueryArgs<Receipt, WhereOptionsReceipt>): Promise<Receipts> {
       const query = { ...args.where };
       const parsedQuery = parseWhereArgsToMongoQuery(query);
 
-      const response = await ReceiptModel.find(parsedQuery);
+      const response = await ReceiptModel.find(parsedQuery).populate('receiptBook');
       const countResponse = await ReceiptModel.countDocuments(parsedQuery);
 
       return withPageInfo(args, response, countResponse);
@@ -40,7 +41,7 @@ export const resolvers = {
 
       const query = { ...args.where };
 
-      return await ReceiptModel.findOne(parseWhereArgsToMongoQuery(query));
+      return (await ReceiptModel.findOne(parseWhereArgsToMongoQuery(query))).populate('receiptBook');
     },
   },
   Mutation: {
