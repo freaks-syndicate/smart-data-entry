@@ -54,27 +54,20 @@ export type CreateUserRole = {
 };
 
 export type DateFilterConstraint = {
-  between?: InputMaybe<Array<InputMaybe<Scalars['Date']['input']>>>;
   gt?: InputMaybe<Scalars['Date']['input']>;
   gte?: InputMaybe<Scalars['Date']['input']>;
-  isNotNull?: InputMaybe<Scalars['Date']['input']>;
-  isNull?: InputMaybe<Scalars['Date']['input']>;
   lt?: InputMaybe<Scalars['Date']['input']>;
   lte?: InputMaybe<Scalars['Date']['input']>;
-  notBetween?: InputMaybe<Array<InputMaybe<Scalars['Date']['input']>>>;
 };
 
 export type FloatFilterConstraint = {
-  between?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
   eq?: InputMaybe<Scalars['Float']['input']>;
   gt?: InputMaybe<Scalars['Float']['input']>;
   gte?: InputMaybe<Scalars['Int']['input']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
-  is?: InputMaybe<Scalars['Float']['input']>;
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
   ne?: InputMaybe<Scalars['Float']['input']>;
-  notBetween?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
   notIn?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
 };
 
@@ -94,18 +87,22 @@ export enum IdCode {
   Pan = 'PAN'
 }
 
+export type IdFilterConstraints = {
+  eq?: InputMaybe<Scalars['String']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  ne?: InputMaybe<Scalars['String']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type IntFilterConstraint = {
-  between?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   eq?: InputMaybe<Scalars['Int']['input']>;
   gt?: InputMaybe<Scalars['Int']['input']>;
   gte?: InputMaybe<Scalars['Int']['input']>;
   in?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  is?: InputMaybe<Scalars['Int']['input']>;
   lt?: InputMaybe<Scalars['Int']['input']>;
   lte?: InputMaybe<Scalars['Int']['input']>;
   ne?: InputMaybe<Scalars['Int']['input']>;
-  notBetween?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
 };
 
 export enum ModeOfPayment {
@@ -311,8 +308,8 @@ export type StringFilterConstraint = {
   is?: InputMaybe<Scalars['String']['input']>;
   like?: InputMaybe<Scalars['String']['input']>;
   ne?: InputMaybe<Scalars['String']['input']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   not?: InputMaybe<Scalars['String']['input']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   notLike?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -362,54 +359,47 @@ export type UserRoles = {
   results?: Maybe<Array<Maybe<UserRole>>>;
 };
 
-export type UuidFilterConstraints = {
-  eq?: InputMaybe<Scalars['String']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  ne?: InputMaybe<Scalars['String']['input']>;
-  notIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
 export type WhereOptionsReceipt = {
   address?: InputMaybe<StringFilterConstraint>;
   amount?: InputMaybe<IntFilterConstraint>;
   and?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptFields>>>;
   financialYear?: InputMaybe<StringFilterConstraint>;
-  id?: InputMaybe<StringFilterConstraint>;
+  id?: InputMaybe<Scalars['String']['input']>;
   idCode?: InputMaybe<StringFilterConstraint>;
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
   or?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptFields>>>;
   receiptNumber?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<UuidFilterConstraints>;
+  uuid?: InputMaybe<IdFilterConstraints>;
 };
 
 export type WhereOptionsReceiptBook = {
   and?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptBookFields>>>;
   financialYear?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<StringFilterConstraint>;
+  id?: InputMaybe<Scalars['String']['input']>;
   or?: InputMaybe<Array<InputMaybe<WhereOptionsReceiptBookFields>>>;
   receiptBookNumber?: InputMaybe<IntFilterConstraint>;
   receiptSeries?: InputMaybe<IntFilterConstraint>;
   totalReceipts?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<UuidFilterConstraints>;
+  uuid?: InputMaybe<IdFilterConstraints>;
 };
 
 export type WhereOptionsReceiptBookFields = {
   financialYear?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<StringFilterConstraint>;
+  id?: InputMaybe<Scalars['String']['input']>;
   receiptBookNumber?: InputMaybe<IntFilterConstraint>;
   receiptSeries?: InputMaybe<IntFilterConstraint>;
   totalReceipts?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<UuidFilterConstraints>;
+  uuid?: InputMaybe<IdFilterConstraints>;
 };
 
 export type WhereOptionsReceiptFields = {
   address?: InputMaybe<StringFilterConstraint>;
   amount?: InputMaybe<IntFilterConstraint>;
   financialYear?: InputMaybe<StringFilterConstraint>;
-  id?: InputMaybe<StringFilterConstraint>;
+  id?: InputMaybe<Scalars['String']['input']>;
   modeOfPayment?: InputMaybe<StringFilterConstraint>;
   receiptNumber?: InputMaybe<IntFilterConstraint>;
-  uuid?: InputMaybe<UuidFilterConstraints>;
+  uuid?: InputMaybe<IdFilterConstraints>;
 };
 
 export type WhereOptionsUser = {
@@ -505,6 +495,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Id: Id;
   IdCode: IdCode;
+  IdFilterConstraints: IdFilterConstraints;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   IntFilterConstraint: IntFilterConstraint;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
@@ -529,7 +520,6 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<User>;
   UserRole: ResolverTypeWrapper<UserRole>;
   UserRoles: ResolverTypeWrapper<UserRoles>;
-  UuidFilterConstraints: UuidFilterConstraints;
   WhereOptionsReceipt: WhereOptionsReceipt;
   WhereOptionsReceiptBook: WhereOptionsReceiptBook;
   WhereOptionsReceiptBookFields: WhereOptionsReceiptBookFields;
@@ -552,6 +542,7 @@ export type ResolversParentTypes = {
   FloatFilterConstraint: FloatFilterConstraint;
   ID: Scalars['ID']['output'];
   Id: Id;
+  IdFilterConstraints: IdFilterConstraints;
   Int: Scalars['Int']['output'];
   IntFilterConstraint: IntFilterConstraint;
   JSON: Scalars['JSON']['output'];
@@ -574,7 +565,6 @@ export type ResolversParentTypes = {
   User: User;
   UserRole: UserRole;
   UserRoles: UserRoles;
-  UuidFilterConstraints: UuidFilterConstraints;
   WhereOptionsReceipt: WhereOptionsReceipt;
   WhereOptionsReceiptBook: WhereOptionsReceiptBook;
   WhereOptionsReceiptBookFields: WhereOptionsReceiptBookFields;
