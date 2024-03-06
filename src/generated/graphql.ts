@@ -266,7 +266,7 @@ export type ReceiptBook = {
   receiptBookNumber: Scalars['Int']['output'];
   receiptSeries: Scalars['Int']['output'];
   receipts?: Maybe<Array<Maybe<Receipt>>>;
-  totalReceipts?: Maybe<Scalars['Int']['output']>;
+  totalReceipts: Scalars['Int']['output'];
   usedReceipts: Scalars['Int']['output'];
   uuid: Scalars['String']['output'];
 };
@@ -641,7 +641,7 @@ export type ReceiptBookResolvers<ContextType = any, ParentType extends Resolvers
   receiptBookNumber?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   receiptSeries?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   receipts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Receipt']>>>, ParentType, ContextType>;
-  totalReceipts?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  totalReceipts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   usedReceipts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uuid?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

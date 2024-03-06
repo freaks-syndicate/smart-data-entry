@@ -65,12 +65,8 @@ export const resolvers = {
       const uuid = uuidFromString(ReceiptModel.name, sanitizedName);
       const { item } = args;
 
-      // Using transactions to prevent race conditions
-      const session = await mongoose.startSession();
-      session.startTransaction();
-
       try {
-        const receiptBook = await ReceiptBookModel.findById(args.item.receiptBookId).session(session);
+        const receiptBook = await ReceiptBookModel.findById(args.item.receiptBookId);
         if (!receiptBook) {
           throw new ApolloError('ReceiptBook not found', 'RECEIPTBOOK_NOT_FOUND');
         }
@@ -93,19 +89,15 @@ export const resolvers = {
           receiptBook: receiptBook.id,
         });
 
-        await newReceipt.save({ session });
+        await newReceipt.save();
 
         receiptBook.usedReceipts += 1;
-        await receiptBook.save({ session });
+        await receiptBook.save();
 
-        await session.commitTransaction();
         return newReceipt.populate('receiptBook');
       } catch (error) {
-        await session.abortTransaction();
         console.error(`Receipt.create uuid=[${uuid}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error creating Receipt'));
-      } finally {
-        session.endSession();
       }
     },
     async updateReceipt(parent: never, args: UpdateArgs<UpdateReceipt>, context: GraphQLRequestContextWithAuth): Promise<Receipt> {
@@ -168,32 +160,25 @@ export const resolvers = {
         throw new ApolloError('An "id" is required to delete.', 'DELETE_ARGS_REQUIRED');
       }
 
-      const session = await mongoose.startSession();
-      session.startTransaction();
-
       try {
         const { id } = args;
-        const deletedReceipt = await ReceiptModel.findByIdAndDelete(id, { session });
+        const deletedReceipt = await ReceiptModel.findByIdAndDelete(id);
 
         if (!deletedReceipt) {
           throw new ApolloError('Receipt not found', 'NOT_FOUND');
         }
 
         // Update the usedReceipts counter in the corresponding ReceiptBook
-        const receiptBook = await ReceiptBookModel.findById(deletedReceipt.receiptBook).session(session);
+        const receiptBook = await ReceiptBookModel.findById(deletedReceipt.receiptBook);
         if (receiptBook) {
           receiptBook.usedReceipts -= 1;
-          await receiptBook.save({ session });
+          await receiptBook.save();
         }
 
-        await session.commitTransaction();
         return deletedReceipt.populate('receiptBook');
       } catch (error) {
-        await session.abortTransaction();
         console.error(`Receipt.delete [${args.id}]`, error);
         throw DataStoreError(formatDataStoreError(error, 'Error deleting Receipt'));
-      } finally {
-        session.endSession();
       }
     },
   },

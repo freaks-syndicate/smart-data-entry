@@ -161,7 +161,7 @@ type ReceiptBook {
   uuid: String!
   receiptBookNumber: Int!
   receiptSeries: Int!
-  totalReceipts: Int
+  totalReceipts: Int!
   financialYear: String
 
   receipts: [Receipt]
