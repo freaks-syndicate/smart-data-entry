@@ -203,7 +203,7 @@ type Query {
 input CreateReceiptBook {
   receiptBookNumber: Int!
   receiptSeries: Int!
-  totalReceipts: Int
+  totalReceipts: Int!
   financialYear: String
 }
 
