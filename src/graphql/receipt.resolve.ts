@@ -79,7 +79,7 @@ export const resolvers = {
         // const nextReceiptNumber = receiptBook.receiptSeries + receiptBook.usedReceipts;
 
         const lastReceipt = await ReceiptModel.findOne({ receiptBook: args.item.receiptBookId }).sort({ receiptNumber: -1 });
-        const nextReceiptNumber = lastReceipt ? lastReceipt.receiptNumber + 1 : 1;
+        const nextReceiptNumber = lastReceipt ? lastReceipt.receiptNumber + 1 : receiptBook.receiptSeries;
 
         const newReceipt = new ReceiptModel({
           ...item,
